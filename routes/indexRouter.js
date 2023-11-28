@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var express_1 = require("express");
+var indexController_1 = require("../controllers/indexController");
+var userRouter_1 = require("./userRouter");
+var categoryRouter_1 = require("./categoryRouter");
+var indexRouter = (0, express_1.Router)();
+indexRouter.use(userRouter_1.default);
+indexRouter.use(categoryRouter_1.default);
+indexRouter.get("/", indexController_1.index);
+exports.default = indexRouter;
