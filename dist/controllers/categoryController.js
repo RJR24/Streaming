@@ -12,37 +12,52 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeCategory = exports.updateCategory = exports.getAllCategories = exports.createCategory = void 0;
+exports.updateCategory = exports.getAllCategories = exports.removeCategory = exports.createCategory = void 0;
 const CategoryModel_1 = __importDefault(require("../models/CategoryModel"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const createCategory = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { title, description } = req.body;
+        const existingCategory = yield CategoryModel_1.default.findOne({ title });
+        if (existingCategory) {
+            const response = {
+                error: "Category already exists",
+                message: "A category with this title already exists",
+            };
+            return res.status(400).json(response);
+        }
         const newCategory = yield CategoryModel_1.default.create({ title, description });
-        return res
-            .status(201)
-            .json({ message: "Category created successfully!", data: newCategory });
+        const response = {
+            message: "Category created successfully!",
+            data: newCategory,
+        };
+        return res.status(201).json(response);
     }
     catch (error) {
         console.log("Error creating category:", error);
-        return res.status(500).json({
+        const response = {
             error: "Error creating category",
             message: error.message,
-        });
+        };
+        return res.status(500).json(response);
     }
 });
 exports.createCategory = createCategory;
 const getAllCategories = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const categoriesList = yield CategoryModel_1.default.find();
-        return res.status(200).json({ data: categoriesList });
+        const response = {
+            data: categoriesList !== undefined ? categoriesList : [],
+        };
+        return res.status(200).json(response);
     }
     catch (error) {
         console.log("Error fetching categories:", error);
-        return res.status(500).json({
+        const response = {
             error: "Error fetching categories",
             message: error.message,
-        });
+        };
+        return res.status(500).json(response);
     }
 });
 exports.getAllCategories = getAllCategories;
@@ -50,35 +65,44 @@ const updateCategory = (req, res) => __awaiter(void 0, void 0, void 0, function*
     try {
         const { id } = req.params;
         if (!mongoose_1.default.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({
+            const response = {
                 error: "Invalid ObjectId",
                 message: "The provided ID is not a valid ObjectId.",
-            });
+            };
+            res.status(400).json(response);
+            return;
         }
         const categoryId = new mongoose_1.default.Types.ObjectId(id);
         const { title, description } = req.body;
         const category = yield CategoryModel_1.default.findByIdAndUpdate(categoryId, { title, description }, { new: true });
         if (!category) {
-            return res.status(404).json({
+            const notFoundResponse = {
                 error: "Category not found",
                 message: "Category not found!",
-            });
+            };
+            res.status(404).json(notFoundResponse);
+            return;
         }
-        return res.json({
+        const response = {
             message: "Category updated successfully!",
             data: category,
-        });
+        };
+        res.json(response);
     }
     catch (error) {
-        console.log("Error updating category:", error);
+        console.error("Error updating category:", error);
         if (error instanceof Error) {
-            return res.status(500).json({
+            const response = {
                 error: "Error updating category",
                 message: error.message,
-            });
+            };
+            res.status(500).json(response);
         }
         else {
-            return res.status(500).json({ error: "Unknown error" });
+            const response = {
+                error: "Unknown error",
+            };
+            res.status(500).json(response);
         }
     }
 });
@@ -87,29 +111,42 @@ const removeCategory = (req, res) => __awaiter(void 0, void 0, void 0, function*
     try {
         const { id } = req.params;
         if (!mongoose_1.default.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({
+            const response = {
                 error: "Invalid ObjectId",
                 message: "The provided ID is not a valid ObjectId.",
-            });
+            };
+            res.status(400).json(response);
+            return;
         }
         const categoryId = new mongoose_1.default.Types.ObjectId(id);
         const category = yield CategoryModel_1.default.findByIdAndDelete(categoryId);
         if (!category) {
-            return res
-                .status(404)
-                .json({ error: "Category not found", message: "Category not found!" });
+            const notFoundResponse = {
+                error: "Category not found",
+                message: "Category not found!",
+            };
+            res.status(404).json(notFoundResponse);
+            return;
         }
-        return res.status(200).json({ message: "Category removed successfully!" });
+        const response = {
+            message: "Category removed successfully!",
+        };
+        res.status(200).json(response);
     }
     catch (error) {
-        console.log("Error removing category:", error);
+        console.error("Error removing category:", error);
         if (error instanceof Error) {
-            return res
-                .status(500)
-                .json({ error: "Internal error", message: error.message });
+            const response = {
+                error: "Internal error",
+                message: error.message,
+            };
+            res.status(500).json(response);
         }
         else {
-            return res.status(500).json({ error: "Unknown error" });
+            const response = {
+                error: "Unknown error",
+            };
+            res.status(500).json(response);
         }
     }
 });

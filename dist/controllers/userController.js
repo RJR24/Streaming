@@ -12,13 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logoutUser = exports.getUserProfile = exports.loginUser = exports.registerUser = void 0;
+exports.logoutUser = exports.getUserProfile = exports.updateUserProfile = exports.loginUser = exports.registerUser = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const UserModel_1 = __importDefault(require("../models/UserModel"));
 const tokenBlackList_1 = __importDefault(require("../models/tokenBlackList"));
 const saltRounds = 10;
-console.log("JWT_SECRET:", process.env.JWT_SECRET);
 const jwtSecret = process.env.JWT_SECRET;
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -84,6 +83,30 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.loginUser = loginUser;
+const logoutUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const token = req.header("x-auth-token");
+        if (!token) {
+            return res.status(400).json({ error: "No token provided" });
+        }
+        const findToken = yield tokenBlackList_1.default.findOne({ token });
+        if (findToken) {
+            return res.status(401).json({
+                error: "Token already blacklisted / User already logged out!",
+            });
+        }
+        yield tokenBlackList_1.default.create({ token });
+        return res.status(200).json({ message: "Logout successful" });
+    }
+    catch (error) {
+        console.error("Error logging out:", error);
+        return res.status(500).json({
+            error: "Internal server error",
+            message: error.message,
+        });
+    }
+});
+exports.logoutUser = logoutUser;
 const getUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = req.user;
@@ -101,30 +124,36 @@ const getUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.getUserProfile = getUserProfile;
-const logoutUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const updateUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
-        const token = req.header("x-auth-token");
-        if (!token) {
-            return res.status(400).json({ error: "No token provided" });
-        }
-        const findToken = yield tokenBlackList_1.default.findOne({ token });
-        if (findToken) {
-            return res
-                .status(401)
-                .json({
-                error: "Token already blacklisted / User already logged out!",
+        const { username, email } = req.body;
+        const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a._id;
+        if (!userId) {
+            return res.status(401).json({
+                error: "Unauthorized",
+                message: "User not authenticated",
             });
         }
-        yield tokenBlackList_1.default.create({ token });
-        return res.status(200).json({ message: "Logout successful" });
+        const updatedUser = yield UserModel_1.default.findByIdAndUpdate(userId, { username, email }, { new: true });
+        if (!updatedUser) {
+            return res.status(404).json({
+                error: "Not Found",
+                message: "User not found",
+            });
+        }
+        return res.status(200).json({
+            message: "User profile updated successfully!",
+            data: updatedUser,
+        });
     }
     catch (error) {
-        console.error("Error logging out:", error);
+        console.error("Error updating user profile:", error);
         return res.status(500).json({
             error: "Internal server error",
             message: error.message,
         });
     }
 });
-exports.logoutUser = logoutUser;
+exports.updateUserProfile = updateUserProfile;
 //# sourceMappingURL=userController.js.map
