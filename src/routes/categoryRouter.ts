@@ -1,8 +1,8 @@
 import { Router } from "express";
 import {
   createCategory,
-  getAllCategories,
   removeCategory,
+  getAllCategories,
   updateCategory,
 } from "../controllers/categoryController";
 
