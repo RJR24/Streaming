@@ -12,3 +12,4 @@ indexRouter.use(userRouter_1.default);
 indexRouter.use(categoryRouter_1.default);
 indexRouter.get("/", indexController_1.index);
 exports.default = indexRouter;
+//# sourceMappingURL=indexRouter.js.map
