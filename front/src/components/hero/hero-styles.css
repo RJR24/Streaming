@@ -1,0 +1,14 @@
+
+.hero-container {
+  background: url("../../assets/image-logo/heroImage3.png") center/cover;
+
+  height: 500px;
+  color: white;
+}
+.movie-title{
+  font-size: 5rem;
+  font-weight: 500;
+}
+.hero-movie-details{
+  width: 40rem;
+}
