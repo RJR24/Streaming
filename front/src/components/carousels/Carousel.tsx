@@ -1,16 +1,17 @@
-// Carousel.tsx
-import React from 'react';
-import Slider from 'react-slick';
+// components/carousels/Carousel.tsx
+import React from "react";
+import Slider from "react-slick";
+import Image from "next/image";
 
 interface CarouselProps {
   title: string;
-  items: React.ReactNode[]; // You can adjust the type based on your actual movie item component
+  items: { title: string; imageUrl: string }[];
 }
 
-const Carousel: React.FC<CarouselProps> = ({ title, items }) => {
+const Carousel: React.FC<CarouselProps> = ({ title, items = [] }) => {
   const settings = {
     infinite: true,
-    slidesToShow: 4,
+    slidesToShow: 5,
     slidesToScroll: 1,
     // Add other settings as needed
   };
@@ -19,9 +20,14 @@ const Carousel: React.FC<CarouselProps> = ({ title, items }) => {
     <div className="my-8">
       <h2 className="text-2xl font-bold mb-4">{title}</h2>
       <Slider {...settings}>
-        {items.map((item, index) => (
+        {items.map((movie, index) => (
           <div key={index} className="px-2">
-            {item}
+            <Image
+              src={movie.imageUrl}
+              alt={movie.title}
+              width={285}
+              height={160}
+            />
           </div>
         ))}
       </Slider>
