@@ -127,7 +127,7 @@ exports.getUserProfile = getUserProfile;
 const updateUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
-        const { username, email } = req.body;
+        const { name, email } = req.body;
         const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a._id;
         if (!userId) {
             return res.status(401).json({
@@ -135,7 +135,7 @@ const updateUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, functi
                 message: "User not authenticated",
             });
         }
-        const updatedUser = yield UserModel_1.default.findByIdAndUpdate(userId, { username, email }, { new: true });
+        const updatedUser = yield UserModel_1.default.findByIdAndUpdate(userId, { name, email }, { new: true });
         if (!updatedUser) {
             return res.status(404).json({
                 error: "Not Found",
