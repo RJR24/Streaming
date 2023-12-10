@@ -8,32 +8,38 @@ import "./signup-styles.css";
 import axiosInstance from "../../utils/axiosConfig";
 import Link from "next/link";
 import SignInSignUpHeader from "../sIn-sUp-header/SignInSignUpHeader";
+import { useRouter } from "next/router";
+import axios from "axios";
 
 const SignUp = () => {
+  const router = useRouter();
+
   const formik = useFormik({
     initialValues: {
+      name: "",
       email: "",
       password: "",
-      confirmPassword: "",
       terms: false,
     },
     validationSchema: Yup.object({
+      name: Yup.string().required("Required"),
       email: Yup.string().email("Invalid email address").required("Required"),
       password: Yup.string().required("Required"),
-      confirmPassword: Yup.string()
-        .oneOf([Yup.ref("password"), null], "Passwords must match")
-        .required("Required"),
       terms: Yup.boolean().oneOf(
         [true],
         "You must accept the terms and conditions"
       ),
     }),
+
     onSubmit: async (values, { setSubmitting, resetForm }) => {
+      console.log("onSubmit");
+
       try {
-        const response = await axiosInstance.post("/api/signUp", values);
+        const response = await axios.post("http://localhost:8000/auth/signup", values);
         console.log(response.data);
         handleSuccess();
         resetForm();
+        router.push("/login");
       } catch (error) {
         handleError(error);
       } finally {
@@ -65,9 +71,9 @@ const SignUp = () => {
     <section className=" ">
       <SignInSignUpHeader />
 
-      <div className="signUp-login  flex flex-col items-center justify-center  px-6 py-8 mx-auto ">
+      <div className="signUp flex flex-col items-center justify-center px-6 py-8 mx-auto ">
         <div className="w-full rounded-lg md:mt-0 sm:max-w-md xl:p-0">
-          <div className=" bg-black opacity-80 px-16 py-14 space-y-4 md:space-y-6 ">
+          <div className=" bg-black opacity-70 px-16 py-14 space-y-4 md:space-y-6 ">
             <h1 className="text-xl font-bold leading-tight tracking-tight  md:text-2xl text-white">
               Sign up
             </h1>
@@ -75,6 +81,25 @@ const SignUp = () => {
               className="space-y-4 md:space-y-6"
               onSubmit={formik.handleSubmit}
             >
+              <div>
+                <label
+                  htmlFor="name"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                ></label>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  placeholder="Enter your name"
+                  className=" px-4 pt-5 pb-2  rounded-sm w-full outline-none text-sm placeholder-black::placeholder"
+                  value={formik.values.name}
+                  onChange={formik.handleChange}
+                />
+                {formik.touched.name && formik.errors.name ? (
+                  <div className="text-red-500">{formik.errors.name}</div>
+                ) : null}
+              </div>
+
               <div>
                 <label
                   htmlFor="email"
@@ -86,6 +111,8 @@ const SignUp = () => {
                   id="email"
                   placeholder="Email or phone number"
                   className=" px-4 pt-5 pb-2  rounded-sm w-full outline-none text-sm placeholder-black::placeholder"
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
                 />
                 {formik.touched.email && formik.errors.email ? (
                   <div className="text-red-500">{formik.errors.email}</div>
@@ -102,30 +129,35 @@ const SignUp = () => {
                   id="password"
                   placeholder="Password"
                   className="px-4 pt-5 pb-2  rounded-sm w-full outline-none text-sm"
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
                 />
                 {formik.touched.password && formik.errors.password ? (
                   <div className="text-red-500">{formik.errors.password}</div>
                 ) : null}
               </div>
+
               <div>
-                <label
-                  htmlFor="confirmPassword"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                ></label>
+                
                 <input
-                  type="password"
-                  name="confirmPassword"
-                  id="confirmPassword"
-                  placeholder="Confirm password"
-                  className="px-4 pt-5 pb-2  rounded-sm w-full outline-none text-sm"
+                  type="checkbox"
+                  name="terms"
+                  id="terms"
+                  checked={formik.values.terms}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
-                {formik.touched.confirmPassword &&
-                formik.errors.confirmPassword ? (
-                  <div className="text-red-500">
-                    {formik.errors.confirmPassword}
-                  </div>
+<label
+                  htmlFor="terms"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  I accept all terms.
+                </label>
+                {formik.touched.password && formik.errors.password ? (
+                  <div className="text-red-500">{formik.errors.password}</div>
                 ) : null}
               </div>
+
               <div className="flex items-start"></div>
               <button
                 type="submit"
@@ -135,6 +167,7 @@ const SignUp = () => {
                 {formik.isSubmitting ? "Creating..." : "Create an account"}
               </button>
             </form>
+
             <p className="text-sm font-light text-gray-700 dark:text-gray-400">
               Already have an account?{" "}
               <a
