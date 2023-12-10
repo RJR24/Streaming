@@ -11,7 +11,7 @@ const jwtSecret = process.env.JWT_SECRET!;
 
 const registerUser = async (req: Request, res: Response) => {
   try {
-    const { username, email, password } = req.body;
+    const { name, email, password } = req.body;
 
     // Check if the user already exists
     const existingUser = await UserModel.findOne({ email });
@@ -27,7 +27,7 @@ const registerUser = async (req: Request, res: Response) => {
 
     // Create a new user
     const newUser = await UserModel.create({
-      username,
+      name,
       email,
       password: hashedPassword,
     });

@@ -19,6 +19,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 import indexRouter from "./routes/indexRouter";
+import cors = require("cors");
 
 
 // Set up Express
@@ -27,6 +28,7 @@ const port = process.env.PORT;
 
 // Middleware to parse JSON
 app.use(json());
+app.use(cors());
 
 // Connect to MongoDB
 

@@ -1,7 +1,7 @@
 import { Schema, Document, model } from "mongoose";
 
 interface IUser extends Document {
-  username: string;
+  name: string;
   email: string;
   password: string; // Assuming you'll store hashed passwords
   avatar?: string; // Example: URL or file path to user's avatar
@@ -10,7 +10,7 @@ interface IUser extends Document {
 
 const userSchema = new Schema<IUser>(
   {
-    username: {
+    name: {
       type: String,
       required: true,
       unique: true,

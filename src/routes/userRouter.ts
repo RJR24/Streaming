@@ -12,8 +12,8 @@ const userRouter = Router();
 
 userRouter.get("/profile", isLoggedIn, getUserProfile);
 userRouter.put("/update", isLoggedIn, updateUserProfile);
-userRouter.post("/signup", registerUser);
-userRouter.post("/login", loginUser);
-userRouter.post("/logout", logoutUser);
+userRouter.post("/auth/signup", registerUser);
+userRouter.post("/auth/login", loginUser);
+userRouter.post("/auth/logout", logoutUser);
 
 export default userRouter;
