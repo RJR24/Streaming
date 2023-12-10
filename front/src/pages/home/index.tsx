@@ -49,17 +49,19 @@ const Home = () => {
       <div className="container-all bg-neutral-900">
         <Header />
         <HeroSection />
-     
 
-      {/* Use Carousel for Trending Movies */}
+        {/* Carousel for Movies */}
 
-      <Carousel title="Popular On Netflix" items={PopularOnNetflix} />
-      <Carousel title="Kaveh, keep watching" items={KavehKeepWatching} />
-      <Carousel title="Trending" items={trendingMovies} />
-      <Carousel title="Netflix Original Content" items={netflixOriginals} />
-      <Carousel title="Today's Top 10 List in UK" items={TodaysTop10ListInUK} />
-      <Carousel title="Watch Again" items={watchAgain} />
-      <Carousel title="My List" items={MyList} />
+        <Carousel title="Popular On Netflix" items={PopularOnNetflix} />
+        <Carousel title="Kaveh, keep watching" items={KavehKeepWatching} />
+        <Carousel title="Trending" items={trendingMovies} />
+        <Carousel title="Netflix Original Content" items={netflixOriginals} />
+        <Carousel
+          title="Today's Top 10 List in UK"
+          items={TodaysTop10ListInUK}
+        />
+        <Carousel title="Watch Again" items={watchAgain} />
+        <Carousel title="My List" items={MyList} />
       </div>
     </>
   );
