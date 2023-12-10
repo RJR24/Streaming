@@ -5,6 +5,7 @@
       "dom.iterable",
       "esnext"
     ],
+    "target": "esnext",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -28,7 +29,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "src/app/meta.js"  ],
+, "src/app/meta.js", "next.config.js"  ],
   "exclude": [
     "node_modules"
   ]
