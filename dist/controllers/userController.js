@@ -21,7 +21,7 @@ const saltRounds = 10;
 const jwtSecret = process.env.JWT_SECRET;
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { username, email, password } = req.body;
+        const { name, email, password } = req.body;
         const existingUser = yield UserModel_1.default.findOne({ email });
         if (existingUser) {
             return res.status(400).json({
@@ -31,7 +31,7 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         }
         const hashedPassword = yield bcrypt_1.default.hash(password, saltRounds);
         const newUser = yield UserModel_1.default.create({
-            username,
+            name,
             email,
             password: hashedPassword,
         });
