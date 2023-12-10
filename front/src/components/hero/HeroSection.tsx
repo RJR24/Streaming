@@ -13,7 +13,7 @@ const HeroSection = () => {
       <div className="hero-movie-details flex flex-col gap-4 relative top-[9.5rem] left-[3.75rem]">
         <div className="movie-title font-bold text-6xl">Peaky Blinders</div>
         <div className="text-3xl flex align-middle gap-4">
-          <Image src={Top10} alt="Top10 sign" width={32} />
+          <Image src={Top10} alt="Top10 sign" width={32} height={32} />
           Number 4 in UK Today
         </div>
         <div
