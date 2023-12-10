@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 
-const baseURL = 'http://localhost:5500';
+const baseURL = 'http://localhost:8000';
 const timeout= 5*1000;
 const headers= {
   'Content-Type': 'application/json',
