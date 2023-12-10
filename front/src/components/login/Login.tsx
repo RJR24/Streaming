@@ -1,15 +1,19 @@
 import React from "react";
+import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import Swal from "sweetalert2";
 
 import "./login-styles.css";
 
 import axiosInstance from "../../utils/axiosConfig";
-import Swal from "sweetalert2";
 import Link from "next/link";
 import SignInSignUpHeader from "../sIn-sUp-header/SignInSignUpHeader";
+import { useRouter } from "next/router";
 
 const Login = () => {
+  const router = useRouter();
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -22,15 +26,16 @@ const Login = () => {
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        // Simulating login API request
-        // Replace this with your actual login logic
         console.log("Logging in with:", values);
+        const response = await axios.post(
+          "http://localhost:8000/auth/login",
+          values
+        );
 
-        // Example API request (replace with actual login logic)
-        // const response = await axiosInstance.post("/api/login", values);
-        // console.log(response.data);
+        console.log(response.data);
 
         handleSuccess();
+        router.push("/home");
       } catch (error) {
         handleError(error);
       } finally {
@@ -60,7 +65,7 @@ const Login = () => {
 
   return (
     <section className="">
-       <SignInSignUpHeader />
+      <SignInSignUpHeader />
       <div className="login flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <div className="w-full bg-black opacity-70 text-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-600 dark:border-gray-700">
           <div className="px-12 py-[4.25rem] space-y-4 md:space-y-6 ">
@@ -74,7 +79,7 @@ const Login = () => {
               <div>
                 <label
                   htmlFor="email"
-                  className="block mb-2 text-sm font-medium dark:text-white"
+                  className="block mb-2 text-sm font-medium text-white"
                 ></label>
                 <input
                   type="email"
@@ -82,6 +87,8 @@ const Login = () => {
                   id="email"
                   placeholder="Email or phone number"
                   className="px-4 pt-5 pb-2  rounded-sm w-full outline-none text-sm"
+                  value={formik.values.email} // Use formik.values for value
+                  onChange={formik.handleChange} // formik.handleChange for onChange
                 />
                 {formik.touched.email && formik.errors.email ? (
                   <div className="text-red-500">{formik.errors.email}</div>
@@ -91,14 +98,15 @@ const Login = () => {
                 <label
                   htmlFor="password"
                   className="block mb-2 text-sm font-medium dark:text-white"
-                >
-                </label>
+                ></label>
                 <input
                   type="password"
                   name="password"
                   id="password"
                   className="px-4 pt-5 pb-2 rounded-sm w-full outline-none text-sm"
                   placeholder="Password"
+                  value={formik.values.password} //  formik.values for value
+                  onChange={formik.handleChange} // formik.handleChange for onChange
                 />
                 {formik.touched.password && formik.errors.password ? (
                   <div className="text-red-500">{formik.errors.password}</div>
@@ -111,50 +119,54 @@ const Login = () => {
               >
                 {formik.isSubmitting ? "Signing In..." : "Sign In"}
               </button>
-              <a href="#" className=" flex justify-center text-sm font-light  dark:text-gray-300">
+              <a
+                href="#"
+                className=" flex justify-center text-sm font-light  dark:text-gray-300"
+              >
                 Forgot password?
-                </a>
-                </form>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    name="rememberMe"
-                    id="rememberMe"
-                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                    checked={formik.values.rememberMe}
-                    onChange={formik.handleChange}
-                  />
-                  <label
-                    htmlFor="rememberMe"
-                    className="ml-2 text-sm font-light  dark:text-gray-300"
-                  >
-                    Remember me
-                  </label>
-                </div>
-               
+              </a>
+            </form>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="rememberMe"
+                  id="rememberMe"
+                  className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                  checked={formik.values.rememberMe}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+                <label
+                  htmlFor="rememberMe"
+                  className="ml-2 text-sm font-light  dark:text-gray-300"
+                >
+                  Remember me
+                </label>
               </div>
-              <p className="text-sm font-light dark:text-gray-400">
-                New to Netflix?{" "}
-                <a
-                  href="/signup"
-                  className="font-medium text-primary-400 hover:underline dark:text-primary-500"
-                >
-                  Sign up now.
-                </a>
-              </p>
+            </div>
+            <p className="text-sm font-light dark:text-gray-400">
+              New to Netflix?{" "}
+              <a
+                href="/signup"
+                className="font-medium text-primary-400 hover:underline dark:text-primary-500"
+              >
+                Sign up now.
+              </a>
+            </p>
 
-              <p className=" recaptch-info text-xs font-light dark:text-gray-400 ">
-                Sign-in is protected by Google reCAPTCHA to ensure you’re not a
-                bot.{" "}
-                <span
-                  className="text-primary-400 cursor-pointer hover:underline"
-                  onClick={() => alert("Learn more clicked")}
-                >
-                  <b className=" text-blue-800">{"<![CDATA[<b>Learn more.</b>]]>"}</b>
-                </span>
-              </p>
-           
+            <p className=" recaptch-info text-xs font-light dark:text-gray-400 ">
+              Sign-in is protected by Google reCAPTCHA to ensure you’re not a
+              bot.{" "}
+              <span
+                className="text-primary-400 cursor-pointer hover:underline"
+                onClick={() => alert("Learn more clicked")}
+              >
+                <b className=" text-blue-800">
+                  {"<![CDATA[<b>Learn more.</b>]]>"}
+                </b>
+              </span>
+            </p>
           </div>
         </div>
       </div>

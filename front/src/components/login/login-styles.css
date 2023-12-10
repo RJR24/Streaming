@@ -15,10 +15,11 @@ body {
   z-index: -1;
 }
 
-.signUp-login input {
+.login input {
   background-color: rgba(16, 16, 16);
+  color: white !important;
 }
-.signUp-login input[type="submit"] {
+.login input[type="submit"] {
   background-color: rgba(70, 90, 126, 1) !important;
   color: white;
 }
