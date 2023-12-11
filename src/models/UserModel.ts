@@ -1,11 +1,12 @@
-import { Schema, Document, model } from "mongoose";
+import { Schema, Document, model, Types } from "mongoose";
 
 interface IUser extends Document {
   name: string;
   email: string;
-  password: string; // Assuming you'll store hashed passwords
-  avatar?: string; // Example: URL or file path to user's avatar
+  password: string; //  store hashed passwords
+  avatar?: string; // URL or file path to user's avatar
   isAdmin: boolean;
+  myList: Types.ObjectId[]; // Array of movie IDs in the user's My List
 }
 
 const userSchema = new Schema<IUser>(
@@ -34,6 +35,12 @@ const userSchema = new Schema<IUser>(
       type: Boolean,
       default: false,
     },
+    myList: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "MovieModel", // Reference to the Movie model 
+      },
+    ],
   },
   {
     timestamps: true, // Adds createdAt and updatedAt fields
