@@ -15,8 +15,9 @@ body{
   z-index: -1;
 }
 
-.signUp-login input {
+.signUp input {
   background-color: rgba(70, 90, 126, 0.4);
+  color: white!important;
 }
 .recaptch-info {
   margin-bottom: 4.5rem !important;
