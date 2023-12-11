@@ -1,13 +1,23 @@
 import React from "react";
 import Slider from "react-slick";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import Link from "next/link";
+
+interface MovieItem {
+  title: string;
+  imageUrl: string;
+  id: string;
+}
 
 interface CarouselProps {
   title: string;
-  items: { title: string; imageUrl: string }[];
+  items: MovieItem[];
 }
 
 const Carousel: React.FC<CarouselProps> = ({ title, items = [] }) => {
+  const router = useRouter();
+
   const settings = {
     infinite: true,
     slidesToShow: 5,
@@ -20,14 +30,18 @@ const Carousel: React.FC<CarouselProps> = ({ title, items = [] }) => {
       <h2 className="text-2xl text-neutral-200 ml-2 font-bold mb-4">{title}</h2>
       <Slider {...settings} className=" overflow-hidden">
         {items.map((movie, index) => (
-          <div key={index} className="px-2">
+          <Link
+            href={`/movies/${movie.id}`}
+            key={index}
+            className="px-2 cursor-pointer"
+          >
             <Image
               src={movie.imageUrl}
               alt={movie.title}
               width={285}
               height={160}
             />
-          </div>
+          </Link>
         ))}
       </Slider>
     </div>
