@@ -4,6 +4,7 @@ import Image from "next/image";
 import Header from "../../components/header/Header";
 import HeroSection from "../../components/hero/HeroSection";
 import Carousel from "../../components/carousels/Carousel";
+import MovieDataFetcher from "../../components/dataFetching/MovieDataFetcher";
 
 const Home = () => {
   // data for the carousel items
@@ -54,14 +55,16 @@ const Home = () => {
 
         <Carousel title="Popular On Netflix" items={PopularOnNetflix} />
         <Carousel title="Kaveh, keep watching" items={KavehKeepWatching} />
-        <Carousel title="Trending" items={trendingMovies} />
+        {/* <Carousel title="Trending" items={trendingMovies} /> */}
         <Carousel title="Netflix Original Content" items={netflixOriginals} />
-        <Carousel
+        {/* <Carousel
           title="Today's Top 10 List in UK"
           items={TodaysTop10ListInUK}
-        />
+        /> */}
         <Carousel title="Watch Again" items={watchAgain} />
         <Carousel title="My List" items={MyList} />
+
+        <MovieDataFetcher />
       </div>
     </>
   );
