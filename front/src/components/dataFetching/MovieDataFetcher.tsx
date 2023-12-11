@@ -22,9 +22,12 @@ const MovieDataFetcher: React.FC = () => {
         const trendingMoviesData = response.data.results.map((movie) => ({
           title: movie.title,
           imageUrl: `https://image.tmdb.org/t/p/w500/${movie.poster_path}`,
+          id: movie.id,
         }));
+        console.log(response.data);
+
         setTrendingMovies(trendingMoviesData);
-        console.log(trendingMovies)
+        console.log(trendingMovies);
       } catch (error) {
         console.error("Error fetching trending movies:", error);
       }
@@ -61,7 +64,6 @@ const MovieDataFetcher: React.FC = () => {
     <>
       <Carousel title="Trending" items={trendingMovies} />
       <Carousel title="Today's Top 10 List in UK" items={top10MoviesUK} />
-      {/* Add more carousels as needed */}
     </>
   );
 };
