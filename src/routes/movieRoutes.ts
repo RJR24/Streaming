@@ -5,13 +5,13 @@ import {
   getMovies,
   deleteMovie,
 } from "../controllers/MovieController";
+import { isAdmin, isLoggedIn } from "../middlewares/auth";
 
 const router = express.Router();
 
-// Define movie routes
-router.post("/create", createMovie);
-router.put("/update/:movieId", updateMovie);
-router.get("/list", getMovies);
-router.delete("/delete/:movieId", deleteMovie);
+router.post("/auth/addMovie", isLoggedIn, isAdmin, createMovie);
+router.put("/update/:movieId", isLoggedIn, isAdmin, updateMovie);
+router.get("/list", isLoggedIn, getMovies);
+router.delete("/delete/:movieId", isLoggedIn, isAdmin, deleteMovie);
 
 export default router;
