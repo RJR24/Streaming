@@ -3,10 +3,19 @@ import MovieModel from '../models/movieModel';
 
 const createMovie = async (req: Request, res: Response) => {
   try {
-    const { title, overview, releaseDate, genre, posterPath, backdropPath } = req.body;
+    const {
+      title,
+      movieId,
+      overview,
+      releaseDate,
+      genre,
+      posterPath,
+      backdropPath,
+    } = req.body;
 
     const newMovie = await MovieModel.create({
       title,
+      movieId,
       overview,
       releaseDate,
       genre,
