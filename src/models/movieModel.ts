@@ -1,10 +1,10 @@
-// models/MovieModel.ts
-import { Schema, Document, model } from 'mongoose';
+import { Schema, Document, model } from "mongoose";
 
 interface IMovie extends Document {
   title: string;
+  movieId: string;
   overview: string;
-  releaseDate: Date;
+  releaseDate: String;
   genre: string[];
   posterPath: string;
   backdropPath: string;
@@ -17,31 +17,34 @@ const movieSchema = new Schema<IMovie>(
       type: String,
       required: true,
     },
-    overview: {
+    movieId: {
       type: String,
       required: true,
     },
+    overview: {
+      type: String,
+      required: false,
+    },
     releaseDate: {
-      type: Date,
-      required: true,
+      type: String,
+      required: false,
     },
     genre: {
       type: [String],
-      required: true,
+      required: false,
     },
     posterPath: {
       type: String,
-      required: true,
+      required: false,
     },
     backdropPath: {
       type: String,
-      required: true,
+      required: false,
     },
-    // Add other movie fields as needed
   },
   { timestamps: true }
 );
 
-const MovieModel = model<IMovie>('Movie', movieSchema);
+const MovieModel = model<IMovie>("Movie", movieSchema);
 
 export default MovieModel;
