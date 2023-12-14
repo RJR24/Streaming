@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 
 const Login = () => {
   const router = useRouter();
-
+  const [token, setToken] = useState(""); // State to store the token
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -33,6 +33,15 @@ const Login = () => {
         );
 
         console.log(response.data);
+
+        // Extract the token from the response
+        const authToken = response.data.token;
+
+        // Store the token in localStorage
+        localStorage.setItem("x-auth-token", authToken);
+
+        // Set the token state for future use
+        setToken(authToken);
 
         handleSuccess();
         router.push("/home");
