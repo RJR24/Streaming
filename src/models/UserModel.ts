@@ -6,7 +6,7 @@ interface IUser extends Document {
   password: string; //  store hashed passwords
   avatar?: string; // URL or file path to user's avatar
   isAdmin: boolean;
-  myList: Types.ObjectId[]; // Array of movie IDs in the user's My List
+  myList: String[]; // Array of movie IDs in the user's My List
 }
 
 const userSchema = new Schema<IUser>(
@@ -36,8 +36,7 @@ const userSchema = new Schema<IUser>(
     },
     myList: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "MovieModel", // Reference to the Movie model 
+        type: String,
       },
     ],
   },
