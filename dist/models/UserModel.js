@@ -5,7 +5,6 @@ const userSchema = new mongoose_1.Schema({
     name: {
         type: String,
         required: true,
-        unique: true,
         trim: true,
     },
     email: {
@@ -26,6 +25,11 @@ const userSchema = new mongoose_1.Schema({
         type: Boolean,
         default: false,
     },
+    myList: [
+        {
+            type: String,
+        },
+    ],
 }, {
     timestamps: true,
 });

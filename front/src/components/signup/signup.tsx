@@ -35,7 +35,10 @@ const SignUp = () => {
       console.log("onSubmit");
 
       try {
-        const response = await axios.post("http://localhost:8000/auth/signup", values);
+        const response = await axios.post(
+          "http://localhost:8000/auth/signup",
+          values
+        );
         console.log(response.data);
         handleSuccess();
         resetForm();
@@ -84,7 +87,7 @@ const SignUp = () => {
               <div>
                 <label
                   htmlFor="name"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  className="block mb-2 text-sm font-medium text-white"
                 ></label>
                 <input
                   type="text"
@@ -138,7 +141,6 @@ const SignUp = () => {
               </div>
 
               <div>
-                
                 <input
                   type="checkbox"
                   name="terms"
@@ -147,11 +149,11 @@ const SignUp = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                 />
-<label
+                <label
                   htmlFor="terms"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  className="block mb-2 text-sm font-medium text-white"
                 >
-                  I accept all terms.
+                  I accept all terms & conditions.
                 </label>
                 {formik.touched.password && formik.errors.password ? (
                   <div className="text-red-500">{formik.errors.password}</div>

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logoutUser = exports.getUserProfile = exports.updateUserProfile = exports.loginUser = exports.registerUser = void 0;
+exports.getMyListMovieDetails = exports.addToMyList = exports.removeFromMyList = exports.logoutUser = exports.getUserProfile = exports.updateUserProfile = exports.loginUser = exports.registerUser = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const UserModel_1 = __importDefault(require("../models/UserModel"));
@@ -127,7 +127,7 @@ exports.getUserProfile = getUserProfile;
 const updateUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
-        const { name, email } = req.body;
+        const { username, email } = req.body;
         const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a._id;
         if (!userId) {
             return res.status(401).json({
@@ -135,7 +135,7 @@ const updateUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, functi
                 message: "User not authenticated",
             });
         }
-        const updatedUser = yield UserModel_1.default.findByIdAndUpdate(userId, { name, email }, { new: true });
+        const updatedUser = yield UserModel_1.default.findByIdAndUpdate(userId, { username, email }, { new: true });
         if (!updatedUser) {
             return res.status(404).json({
                 error: "Not Found",
@@ -156,4 +156,80 @@ const updateUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.updateUserProfile = updateUserProfile;
+const addToMyList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { movieId } = req.params;
+    const userId = req.user._id;
+    try {
+        const user = yield UserModel_1.default.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        if (!user.myList.includes(movieId)) {
+            user.myList.push(movieId);
+            yield user.save();
+        }
+        return res.status(200).json({ message: "Movie added to My List" });
+    }
+    catch (error) {
+        console.error("Error adding movie to My List:", error);
+        return res.status(500).json({
+            error: "Internal server error",
+            message: error.message || "Unknown error occurred",
+        });
+    }
+});
+exports.addToMyList = addToMyList;
+const removeFromMyList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { movieId } = req.params;
+    const userId = req.user._id;
+    try {
+        const user = yield UserModel_1.default.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        const movieIndex = user.myList.indexOf(movieId);
+        if (movieIndex !== -1) {
+            user.myList.splice(movieIndex, 1);
+            yield user.save();
+        }
+        return res.status(200).json({ message: "Movie removed from My List" });
+    }
+    catch (error) {
+        console.error("Error removing movie from My List:", error);
+        return res.status(500).json({
+            error: "Internal server error",
+            message: error.message || "Unknown error occurred",
+        });
+    }
+});
+exports.removeFromMyList = removeFromMyList;
+const getMyListMovieDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { movieId } = req.params;
+    const userId = req.user._id;
+    try {
+        const user = yield UserModel_1.default.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        const isInMyList = user.myList.includes(movieId);
+        if (isInMyList) {
+            return res.status(200).json({
+                isInMyList: true,
+            });
+        }
+        else {
+            return res.status(200).json({
+                isInMyList: false,
+            });
+        }
+    }
+    catch (error) {
+        console.error("Error fetching movie details from My List:", error);
+        return res.status(500).json({
+            error: "Internal server error",
+            message: error.message || "Unknown error occurred",
+        });
+    }
+});
+exports.getMyListMovieDetails = getMyListMovieDetails;
 //# sourceMappingURL=userController.js.map

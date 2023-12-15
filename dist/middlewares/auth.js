@@ -17,10 +17,14 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const UserModel_1 = __importDefault(require("../models/UserModel"));
 const tokenBlackList_1 = __importDefault(require("../models/tokenBlackList"));
 const isLoggedIn = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const token = req.header("x-auth-token");
+    let token = req.header("x-auth-token");
     if (!token) {
         res.status(401).json({ error: "Access denied. No token provided." });
         return;
+    }
+    const bearerPrefix = "Bearer ";
+    if (token.startsWith(bearerPrefix)) {
+        token = token.slice(bearerPrefix.length);
     }
     try {
         const findToken = yield tokenBlackList_1.default.findOne({ token });
@@ -45,6 +49,7 @@ exports.isLoggedIn = isLoggedIn;
 const isAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     if (!((_a = req.user) === null || _a === void 0 ? void 0 : _a.isAdmin)) {
+        console.log(req);
         res.status(403).json({ error: "ACCESS DENIED! Admin permission needed." });
         return;
     }
