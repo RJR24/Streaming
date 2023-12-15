@@ -56,17 +56,25 @@ const SignUp = () => {
       title: "Well done",
       text: "Congratulations! Your account has been successfully created.",
       icon: "success",
-      showConfirmButton: false,
+      showConfirmButton: true,
     });
   };
 
   const handleError = (error) => {
+    let errorMessage =
+      "Unfortunately, there was a problem creating your account. Please try again later.";
+
+    if (error.response) {
+      errorMessage = error.response.data.message || errorMessage;
+    }
+
     Swal.fire({
       title: "Oops.",
-      text: "Unfortunately, there was a problem creating your account. Please try again later.",
+      text: errorMessage,
       icon: "error",
-      showConfirmButton: false,
+      showConfirmButton: true,
     });
+
     console.error("Error submitting registration form:", error);
   };
 
@@ -155,8 +163,8 @@ const SignUp = () => {
                 >
                   I accept all terms & conditions.
                 </label>
-                {formik.touched.password && formik.errors.password ? (
-                  <div className="text-red-500">{formik.errors.password}</div>
+                {formik.touched.terms && formik.errors.terms ? (
+                  <div className="text-red-500">{formik.errors.terms}</div>
                 ) : null}
               </div>
 
