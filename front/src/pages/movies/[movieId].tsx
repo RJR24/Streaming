@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import MovieDetailsFetcher from "../../components/dataFetching/MovieDetailsFetcher";
 import Swal from "sweetalert2";
 import axios from "axios";
 import Image from "next/image";
@@ -18,33 +17,68 @@ interface MovieDetails {
   backdrop_path: string;
   videos: { name: string; key: string; results: Video[] };
 }
+
 const API_URL = "https://api.themoviedb.org/3";
+
 const MovieDetailsPage: React.FC = () => {
-  const addToMyList = async () => {
+  const [movieDetails, setMovieDetails] = useState<MovieDetails | null>(null);
+  const [isInMyList, setIsInMyList] = useState(false);
+  const [id, setId] = useState<string | undefined>();
+  const [token, setToken] = useState<string | undefined>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("x-auth-token") || undefined;
+    }
+    return undefined;
+  });
+  const [initialCheckComplete, setInitialCheckComplete] = useState(false);
+  const router = useRouter();
+
+  const toggleMyList = async () => {
     try {
-      const response = await axios.get<MovieDetails>(`${API_URL}/movie/${id}`, {
-        params: {
-          api_key: "7b269e05a4ae4f5629b1515cafb76014",
-          append_to_response: "videos",
-        },
-      });
-      const movieDetails: MovieDetails = response.data;
+      // Check if the movie is already in the user's My List
+      if (isInMyList) {
+        // Remove from My List
+        await axios.post(
+          `http://localhost:8000/api/user/mylist/remove/${id}`,
+          {},
+          {
+            headers: {
+              "x-auth-token": `Bearer ${token}`,
+            },
+          }
+        );
+        Swal.fire({
+          icon: "success",
+          title: "Removed from My List!",
+          text: `${movieDetails?.title} has been removed from your My List.`,
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      } else {
+        // Add to My List
+        await axios.post(
+          `http://localhost:8000/api/user/mylist/add/${id}`,
+          {},
+          {
+            headers: {
+              "x-auth-token": `Bearer ${token || ""}`,
+            },
+          }
+        );
+        Swal.fire({
+          icon: "success",
+          title: "Added to My List!",
+          text: `${movieDetails?.title} has been added to your My List.`,
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
 
-      // Add to My List
-      await axios.post("/api/user/mylist", { movieId: id });
-
-      // Show success message using Swal2
-      Swal.fire({
-        icon: "success",
-        title: "Added to My List!",
-        text: `${movieDetails.title} has been added to your My List.`,
-        showConfirmButton: false,
-        timer: 2000,
-      });
+      // Toggle the state
+      setIsInMyList(!isInMyList);
     } catch (error) {
       // Handle error
-      console.error("Error adding movie to My List:", error);
-      // Show error message using Swal2
+      console.error("Error updating My List:", error);
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -53,16 +87,36 @@ const MovieDetailsPage: React.FC = () => {
     }
   };
 
-  const [movieDetails, setMovieDetails] = useState<MovieDetails | null>(null);
-  const router = useRouter();
-  const [id, setId] = useState<string | undefined>();
-
   useEffect(() => {
     const { movieId } = router.query;
     if (movieId && typeof movieId === "string") {
       setId(movieId);
     }
   }, [router.query]);
+
+  useEffect(() => {
+    // Check if the movie is already in the user's My List
+    const checkMyListStatus = async () => {
+      try {
+        const isInMyListResponse = await axios.get(
+          `http://localhost:8000/api/user/mylist/${id}`,
+          {
+            headers: {
+              "x-auth-token": `Bearer ${token || ""}`,
+            },
+          }
+        );
+        setIsInMyList(isInMyListResponse.data.isInMyList);
+        setInitialCheckComplete(true);
+      } catch (error) {
+        console.error("Error checking My List status:", error);
+      }
+    };
+
+    if (id) {
+      checkMyListStatus();
+    }
+  }, [id, token]);
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -78,6 +132,7 @@ const MovieDetailsPage: React.FC = () => {
             }
           );
           setMovieDetails(response.data);
+
           console.log("Movie Details:", response.data);
         }
       } catch (error) {
@@ -92,15 +147,16 @@ const MovieDetailsPage: React.FC = () => {
     <>
       <div className="bg-gray-900 min-h-screen text-white">
         <div className="container mx-auto p-8">
-          {movieDetails ? (
+          {initialCheckComplete ? (
             <>
+              {/* Render the component content here */}
               <div className="flex flex-col md:flex-row space-y-6 md:space-y-0">
-                {movieDetails?.videos?.results.length > 0 ? (
+                {movieDetails?.videos?.results?.length &&
+                movieDetails?.videos?.results.length > 0 ? (
                   <div className="w-full md:w-1/2 lg:w-2/3 mx-auto">
                     {/* Filter videos to get the trailer with name 'Official Trailer' */}
                     {(() => {
-                      console.log("firsttttttttttttttttttt");
-                      const trailerVideo = movieDetails?.videos?.results.find(
+                      const trailerVideo = movieDetails?.videos?.results?.find(
                         (video) => video.name === "Official Trailer"
                       );
                       return trailerVideo ? (
@@ -110,7 +166,7 @@ const MovieDetailsPage: React.FC = () => {
                         />
                       ) : (
                         <YouTube
-                          videoId={movieDetails?.videos?.results[0]?.key}
+                          videoId={movieDetails?.videos?.results?.[0]?.key}
                           opts={{ width: "100%", height: "500px" }}
                         />
                       );
@@ -121,30 +177,33 @@ const MovieDetailsPage: React.FC = () => {
                     <Image
                       width={560}
                       height={315}
-                      src={`https://image.tmdb.org/t/p/original/${movieDetails.backdrop_path}`}
-                      alt={movieDetails.title}
+                      src={`https://image.tmdb.org/t/p/original/${movieDetails?.backdrop_path}`}
+                      alt={movieDetails?.title || "Movie Poster"}
                     />
                   </div>
                 )}
+
                 <div className="w-full md:w-1/2 lg:w-1/3 mx-auto flex flex-col justify-center items-center">
                   <h1 className="text-3xl font-bold mb-4">
-                    {movieDetails.title}
+                    {movieDetails?.title}
                   </h1>
                   <p className="text-gray-300 mb-4">
                     <strong>Genre:</strong>{" "}
-                    {movieDetails.genres.map((item) => item.name).join(", ")}
+                    {movieDetails?.genres.map((item) => item.name).join(", ")}
                   </p>
                   <p className="text-gray-300 mb-4">
-                    <strong>Release Year:</strong> {movieDetails.release_date}
+                    <strong>Release Year:</strong> {movieDetails?.release_date}
                   </p>
                   <p className="text-gray-300 mb-6">
-                    {movieDetails.description}
+                    {movieDetails?.description}
                   </p>
                   <button
-                    onClick={addToMyList}
-                    className="bg-blue-500 text-white px-4 py-2 rounded focus:outline-none"
+                    onClick={toggleMyList}
+                    className={`${
+                      isInMyList ? "bg-red-500" : "bg-blue-500"
+                    } text-white px-4 py-2 rounded focus:outline-none`}
                   >
-                    Add to My List
+                    {isInMyList ? "Remove from My List" : "Add to My List"}
                   </button>
                 </div>
               </div>
