@@ -17,8 +17,7 @@ const Login = () => {
   const formik = useFormik({
     initialValues: {
       email: "",
-      password: "",
-      rememberMe: false,
+      password: ""
     },
     validationSchema: Yup.object({
       email: Yup.string().email("Invalid email address").required("Required"),
@@ -55,10 +54,10 @@ const Login = () => {
 
   const handleSuccess = () => {
     Swal.fire({
-      title: "Welcome back!",
+      title: "Welcome!",
       text: "You have successfully signed in.",
       icon: "success",
-      showConfirmButton: false,
+      showConfirmButton: true,
     });
   };
 
