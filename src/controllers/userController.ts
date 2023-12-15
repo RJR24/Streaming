@@ -25,7 +25,7 @@ const registerSchema = Joi.object({
     .message(
       "Password must be at least 8 characters long and include at least one letter, one number, and one special character."
     ),
-   terms: Joi.boolean().valid(true).required(),
+  terms: Joi.boolean().valid(true).required(),
 });
 
 // Validation schema for user login
@@ -36,7 +36,7 @@ const loginSchema = Joi.object({
 
 // Validation schema for updating user profile
 const updateUserProfileSchema = Joi.object({
-  username: Joi.string().max(50), // Adjust the maximum length as needed
+  name: Joi.string().max(50), // Adjust the maximum length as needed
   email: Joi.string().email(),
 });
 
@@ -88,7 +88,7 @@ const registerUser = async (req: Request, res: Response) => {
 const loginUser = async (req: Request, res: Response) => {
   try {
     const { error, value } = loginSchema.validate(req.body);
-console.log(error, value);
+    console.log(error, value);
 
     if (error) {
       return res.status(400).json({
@@ -195,7 +195,7 @@ const updateUserProfile = async (req: Request, res: Response) => {
     }
 
     // Extract validated data
-    const { username, email } = value;
+    const { name, email } = value;
     const userId = req.user?._id;
 
     // Ensure the user is authenticated
@@ -209,7 +209,7 @@ const updateUserProfile = async (req: Request, res: Response) => {
     // Update user profile
     const updatedUser = await UserModel.findByIdAndUpdate(
       userId,
-      { username, email },
+      { name, email },
       { new: true }
     );
 
@@ -235,7 +235,8 @@ const updateUserProfile = async (req: Request, res: Response) => {
 
 const addToMyList = async (req: Request, res: Response) => {
   const { movieId } = req.params;
-  const userId = req.user._id; // Assuming you have user information stored in req.user
+  const userId = req.user._id; // user information stored in req.user
+  const { title, backdrop_path } = req.body;
 
   try {
     const user = await UserModel.findById(userId);
@@ -246,7 +247,7 @@ const addToMyList = async (req: Request, res: Response) => {
 
     // Add the movieId to the user's myList
     if (!user.myList.includes(movieId)) {
-      user.myList.push(movieId);
+      user.myList.push(movieId, title, backdrop_path);
       await user.save();
     }
 
