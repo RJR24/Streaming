@@ -171,10 +171,99 @@ const updateUserProfile = async (req: Request, res: Response) => {
   }
 };
 
+const addToMyList = async (req: Request, res: Response) => {
+  const { movieId } = req.params;
+  const userId = req.user._id; // Assuming you have user information stored in req.user
+
+  try {
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Add the movieId to the user's myList
+    if (!user.myList.includes(movieId)) {
+      user.myList.push(movieId);
+      await user.save();
+    }
+
+    return res.status(200).json({ message: "Movie added to My List" });
+  } catch (error: any) {
+    console.error("Error adding movie to My List:", error);
+    return res.status(500).json({
+      error: "Internal server error",
+      message: error.message || "Unknown error occurred",
+    });
+  }
+};
+
+const removeFromMyList = async (req: Request, res: Response) => {
+  const { movieId } = req.params;
+  const userId = req.user._id;
+
+  try {
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Remove the movieId from the user's myList
+    const movieIndex = user.myList.indexOf(movieId);
+    if (movieIndex !== -1) {
+      user.myList.splice(movieIndex, 1);
+      await user.save();
+    }
+
+    return res.status(200).json({ message: "Movie removed from My List" });
+  } catch (error: any) {
+    console.error("Error removing movie from My List:", error);
+    return res.status(500).json({
+      error: "Internal server error",
+      message: error.message || "Unknown error occurred",
+    });
+  }
+};
+const getMyListMovieDetails = async (req: Request, res: Response) => {
+  const { movieId } = req.params;
+  const userId = req.user._id;
+
+  try {
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Check if the movieId is in the user's myList
+    const isInMyList = user.myList.includes(movieId);
+
+    if (isInMyList) {
+      return res.status(200).json({
+        isInMyList: true,
+      });
+    } else {
+      return res.status(200).json({
+        isInMyList: false,
+      });
+    }
+  } catch (error: any) {
+    console.error("Error fetching movie details from My List:", error);
+    return res.status(500).json({
+      error: "Internal server error",
+      message: error.message || "Unknown error occurred",
+    });
+  }
+};
+
 export {
   registerUser,
   loginUser,
   updateUserProfile,
   getUserProfile,
   logoutUser,
+  removeFromMyList,
+  addToMyList,
+  getMyListMovieDetails,
 };
