@@ -8,11 +8,17 @@ export const isLoggedIn = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  const token = req.header("x-auth-token");
+  let token = req.header("x-auth-token");
 
   if (!token) {
     res.status(401).json({ error: "Access denied. No token provided." });
     return;
+  }
+
+  // Check for the "Bearer " prefix and remove it
+  const bearerPrefix = "Bearer ";
+  if (token.startsWith(bearerPrefix)) {
+    token = token.slice(bearerPrefix.length);
   }
 
   try {
@@ -37,13 +43,13 @@ export const isLoggedIn = async (
     res.status(401).json({ error: "Invalid token." });
   }
 };
-
 export const isAdmin = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   if (!req.user?.isAdmin) {
+    console.log(req)
     res.status(403).json({ error: "ACCESS DENIED! Admin permission needed." });
     return;
   }
