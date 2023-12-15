@@ -62,9 +62,9 @@ const Home = () => {
           items={TodaysTop10ListInUK}
         /> */}
         <Carousel title="Watch Again" items={watchAgain} />
-        <Carousel title="My List" items={MyList} />
 
         <MovieDataFetcher />
+        <Carousel title="My List" items={MyList} />
       </div>
     </>
   );
