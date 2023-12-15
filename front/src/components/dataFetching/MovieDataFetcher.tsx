@@ -1,4 +1,3 @@
-// MovieDataFetcher.tsx
 import React, { useEffect, useState } from "react";
 import Carousel from "../carousels/Carousel";
 import axios from "axios";
@@ -15,7 +14,7 @@ const MovieDataFetcher: React.FC = () => {
           "https://api.themoviedb.org/3/movie/popular?api_key=7b269e05a4ae4f5629b1515cafb76014",
           {
             params: {
-              api_key: "7b269e05a4ae4f5629b1515cafb76014",
+              api_key: process.env.STREAMING_MOVIE_API_KEY,
             },
           }
         );
@@ -40,16 +39,17 @@ const MovieDataFetcher: React.FC = () => {
           "https://api.themoviedb.org/3/movie/top_rated?api_key=7b269e05a4ae4f5629b1515cafb76014",
           {
             params: {
-              api_key: "7b269e05a4ae4f5629b1515cafb76014",
+              api_key: process.env.STREAMING_MOVIE_API_KEY,
               region: "0044", // Country code for the UK
             },
           }
         );
-        const trendingMoviesData = response.data.results.map((movie) => ({
+        const Top10MoviesUK = response.data.results.map((movie) => ({
           title: movie.title,
           imageUrl: `https://image.tmdb.org/t/p/w500/${movie.poster_path}`,
+          id: movie.id,
         }));
-        setTop10MoviesUK(trendingMoviesData);
+        setTop10MoviesUK(Top10MoviesUK);
       } catch (error) {
         console.error("Error fetching top 10 movies in the UK:", error);
       }
