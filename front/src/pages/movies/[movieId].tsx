@@ -52,13 +52,16 @@ const MovieDetailsPage: React.FC = () => {
           title: "Removed from My List!",
           text: `${movieDetails?.title} has been removed from your My List.`,
           showConfirmButton: false,
-          timer: 2000,
+          timer: 3000,
         });
       } else {
         // Add to My List
         await axios.post(
           `http://localhost:8000/api/user/mylist/add/${id}`,
-          {},
+          {
+            title: movieDetails?.title,
+            backdrop_path: `https://image.tmdb.org/t/p/w500${movieDetails?.backdrop_path}`,
+          },
           {
             headers: {
               "x-auth-token": `Bearer ${token || ""}`,
@@ -70,7 +73,7 @@ const MovieDetailsPage: React.FC = () => {
           title: "Added to My List!",
           text: `${movieDetails?.title} has been added to your My List.`,
           showConfirmButton: false,
-          timer: 2000,
+          timer: 3000,
         });
       }
 
