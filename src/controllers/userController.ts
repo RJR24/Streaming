@@ -3,15 +3,55 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import Joi from "joi";
 import UserModel from "../models/UserModel";
 import TokenBlackList from "../models/tokenBlackList";
 
 const saltRounds = 10;
 const jwtSecret = process.env.JWT_SECRET!;
 
+// Validation schema for user registration
+const registerSchema = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().email().required(),
+  password: Joi.string()
+    .min(8)
+    .required()
+    .pattern(
+      new RegExp(
+        '^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-={}[]|;:"<>,.?/~`])'
+      )
+    )
+    .message(
+      "Password must be at least 8 characters long and include at least one letter, one number, and one special character."
+    ),
+   terms: Joi.boolean().valid(true).required(),
+});
+
+// Validation schema for user login
+const loginSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().required(),
+});
+
+// Validation schema for updating user profile
+const updateUserProfileSchema = Joi.object({
+  username: Joi.string().max(50), // Adjust the maximum length as needed
+  email: Joi.string().email(),
+});
+
 const registerUser = async (req: Request, res: Response) => {
   try {
-    const { name, email, password } = req.body;
+    const { error, value } = registerSchema.validate(req.body);
+
+    if (error) {
+      return res.status(400).json({
+        error: "Validation error",
+        message: error.details[0].message,
+      });
+    }
+
+    const { name, email, password } = value;
 
     // Check if the user already exists
     const existingUser = await UserModel.findOne({ email });
@@ -47,7 +87,17 @@ const registerUser = async (req: Request, res: Response) => {
 
 const loginUser = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { error, value } = loginSchema.validate(req.body);
+console.log(error, value);
+
+    if (error) {
+      return res.status(400).json({
+        error: "Validation error",
+        message: error.details[0].message,
+      });
+    }
+
+    const { email, password } = value;
 
     // Check if the user exists
     const user = await UserModel.findOne({ email });
@@ -117,7 +167,7 @@ const logoutUser = async (req: Request, res: Response) => {
 
 const getUserProfile = async (req: Request, res: Response) => {
   try {
-    // my middleware extracts user information from the token
+    // middleware extracts user information from the token
     const user = req.user;
 
     return res.status(200).json({
@@ -134,9 +184,21 @@ const getUserProfile = async (req: Request, res: Response) => {
 };
 const updateUserProfile = async (req: Request, res: Response) => {
   try {
-    const { username, email } = req.body;
+    // Validate user input
+    const { error, value } = updateUserProfileSchema.validate(req.body);
+
+    if (error) {
+      return res.status(400).json({
+        error: "Validation error",
+        message: error.details[0].message,
+      });
+    }
+
+    // Extract validated data
+    const { username, email } = value;
     const userId = req.user?._id;
 
+    // Ensure the user is authenticated
     if (!userId) {
       return res.status(401).json({
         error: "Unauthorized",
