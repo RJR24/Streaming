@@ -1,4 +1,4 @@
-import { Schema, Document, model, Types } from "mongoose";
+import { Schema, Document, model } from "mongoose";
 
 interface IUser extends Document {
   name: string;
@@ -34,11 +34,11 @@ const userSchema = new Schema<IUser>(
       type: Boolean,
       default: false,
     },
-    myList: [
-      {
-        type: String,
-      },
-    ],
+    myList: Array<{
+      movieId: string;
+      title: string;
+      imageUrl: string;
+    }>,
   },
   {
     timestamps: true, // Adds createdAt and updatedAt fields
