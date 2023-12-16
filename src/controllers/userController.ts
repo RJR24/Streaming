@@ -246,8 +246,8 @@ const addToMyList = async (req: Request, res: Response) => {
     }
 
     // Add the movieId to the user's myList
-    if (!user.myList.includes(movieId)) {
-      user.myList.push(movieId, title, backdrop_path);
+    if (!user.myList.some((movie) => movie.id === movieId)) {
+      user.myList.push({ id: movieId, title, imageUrl: backdrop_path });
       await user.save();
     }
 
@@ -273,7 +273,7 @@ const removeFromMyList = async (req: Request, res: Response) => {
     }
 
     // Remove the movieId from the user's myList
-    const movieIndex = user.myList.indexOf(movieId);
+    const movieIndex = user.myList.findIndex((movie) => movie.id === movieId);
     if (movieIndex !== -1) {
       user.myList.splice(movieIndex, 1);
       await user.save();
@@ -300,11 +300,12 @@ const getMyListMovieDetails = async (req: Request, res: Response) => {
     }
 
     // Check if the movieId is in the user's myList
-    const isInMyList = user.myList.includes(movieId);
+    const isInMyList = user.myList.some((movie) => movie.id === movieId);
 
     if (isInMyList) {
       return res.status(200).json({
         isInMyList: true,
+        movieDetails: user.myList.find((movie) => movie.id === movieId),
       });
     } else {
       return res.status(200).json({
