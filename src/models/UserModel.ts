@@ -6,7 +6,11 @@ interface IUser extends Document {
   password: string; //  store hashed passwords
   avatar?: string; // URL or file path to user's avatar
   isAdmin: boolean;
-  myList: String[]; // Array of movie IDs in the user's My List
+  myList: {
+    id: string;
+    title: string;
+    imageUrl: string;
+  }[];
 }
 
 const userSchema = new Schema<IUser>(
@@ -34,11 +38,22 @@ const userSchema = new Schema<IUser>(
       type: Boolean,
       default: false,
     },
-    myList: Array<{
-      movieId: string;
-      title: string;
-      imageUrl: string;
-    }>,
+    myList: [
+      {
+        id: {
+          type: String,
+          required: true,
+        },
+        title: {
+          type: String,
+          required: true,
+        },
+        imageUrl: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
   },
   {
     timestamps: true, // Adds createdAt and updatedAt fields
