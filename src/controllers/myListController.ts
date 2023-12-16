@@ -1,4 +1,3 @@
-// controllers/MyListController.ts
 import UserModel from "../models/UserModel";
 import { Request, Response } from "express";
 
@@ -22,14 +21,14 @@ const toggleMyList = async (
     }
 
     // Check if the movie is already in the user's My List
-    const movieIndex = user.myList.indexOf(movieId);
+    const movieIndex = user.myList.some((movie) => movie.id === movieId);
 
-    if (movieIndex === -1) {
+    if (!movieIndex) {
       // Add the movie to the My List
-      user.myList.push(movieId);
+      user.myList.push({ id: movieId, title: "", imageUrl: "" });
     } else {
       // Remove the movie from the My List
-      user.myList.splice(movieIndex, 1);
+      user.myList = user.myList.filter((movie) => movie.id !== movieId);
     }
 
     await user.save();
