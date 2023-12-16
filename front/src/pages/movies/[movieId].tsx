@@ -10,6 +10,7 @@ interface Video {
   name: string;
 }
 interface MovieDetails {
+  id: string;
   title: string;
   genres: { name: string }[];
   release_date: string;
@@ -51,7 +52,7 @@ const MovieDetailsPage: React.FC = () => {
           icon: "success",
           title: "Removed from My List!",
           text: `${movieDetails?.title} has been removed from your My List.`,
-          showConfirmButton: false,
+          showConfirmButton: true,
           timer: 3000,
         });
       } else {
@@ -59,6 +60,7 @@ const MovieDetailsPage: React.FC = () => {
         await axios.post(
           `http://localhost:8000/api/user/mylist/add/${id}`,
           {
+            id: movieDetails?.id,
             title: movieDetails?.title,
             backdrop_path: `https://image.tmdb.org/t/p/w500${movieDetails?.backdrop_path}`,
           },
@@ -72,7 +74,7 @@ const MovieDetailsPage: React.FC = () => {
           icon: "success",
           title: "Added to My List!",
           text: `${movieDetails?.title} has been added to your My List.`,
-          showConfirmButton: false,
+          showConfirmButton: true,
           timer: 3000,
         });
       }
