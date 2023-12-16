@@ -26,15 +26,11 @@ const Carousel: React.FC<CarouselProps> = ({ title, items = [] }) => {
   };
 
   return (
-    <div className="my-8">
+    <div className="my-8 p-2">
       <h2 className="text-2xl text-neutral-200 ml-2 font-bold mb-4">{title}</h2>
       <Slider {...settings} className=" overflow-hidden">
         {items.map((movie, index) => (
-          <Link
-            href={`/movies/${movie.id}`}
-            key={index}
-            className="px-2 cursor-pointer"
-          >
+          <Link href={`/movies/${movie.id}`} key={index} className=" mx-3 ">
             <Image
               src={movie.imageUrl}
               alt={movie.title}
