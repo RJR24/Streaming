@@ -163,7 +163,7 @@ const Login = () => {
               </a>
             </p>
 
-            <p className=" recaptch-info text-xs font-light dark:text-gray-400 ">
+            <p className=" recaptcha-info text-xs font-light dark:text-gray-400 ">
               Sign-in is protected by Google reCAPTCHA to ensure you’re not a
               bot.{" "}
               <span
