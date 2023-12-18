@@ -320,6 +320,35 @@ const getMyListMovieDetails = async (req: Request, res: Response) => {
     });
   }
 };
+const userMoviesList = async (req: Request, res: Response) => {
+  const { movieId } = req.params;
+  const userId = req.user._id;
+
+  try {
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Check if the movieId is in the user's myList
+    const myListLength = user.myList.length;
+    // console.log(MyList)
+    if (myListLength) {
+      return res.status(200).json({ myList: user.myList });
+    } else {
+      return res.status(200).json({
+        MyList: { myList: []},
+      });
+    }
+  } catch (error: any) {
+    console.error("Error fetching movie List:", error);
+    return res.status(500).json({
+      error: "Internal server error",
+      message: error.message || "Unknown error occurred",
+    });
+  }
+};
 
 export {
   registerUser,
@@ -330,4 +359,5 @@ export {
   removeFromMyList,
   addToMyList,
   getMyListMovieDetails,
+  userMoviesList,
 };
