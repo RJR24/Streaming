@@ -5,7 +5,8 @@ import {
   registerUser,
   logoutUser,
   updateUserProfile,
-  getMyListMovieDetails
+  getMyListMovieDetails,
+  userMoviesList,
 } from "../controllers/userController";
 import { addToMyList, removeFromMyList } from "../controllers/userController";
 import { isLoggedIn } from "../middlewares/auth";
@@ -18,14 +19,17 @@ userRouter.post("/auth/signup", registerUser);
 userRouter.post("/auth/login", loginUser);
 userRouter.post("/auth/logout", logoutUser);
 
-
 // Add to My List
 userRouter.post("/api/user/myList/add/:movieId", isLoggedIn, addToMyList);
 // Remove from My List
-userRouter.post("/api/user/myList/remove/:movieId", isLoggedIn, removeFromMyList);
-// Get My List Movie Details
+userRouter.post(
+  "/api/user/myList/remove/:movieId",
+  isLoggedIn,
+  removeFromMyList
+);
+// Get Movie Details
 userRouter.get("/api/user/myList/:movieId", isLoggedIn, getMyListMovieDetails);
-
-
+// Get User Movie List
+userRouter.get("/api/user/myList/", isLoggedIn, userMoviesList);
 
 export default userRouter;
