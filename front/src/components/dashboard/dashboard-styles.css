@@ -1,0 +1,12 @@
+.BgImage::before {
+  content: "";
+  background: url("../../assets/image-logo/Netflix-signUp-Bg.png") no-repeat
+    center center/cover;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  opacity: 0.3;
+  z-index: -1;
+}
+/* .bg-black {
+  --tw-bg-opacity: .85 !important;} */
