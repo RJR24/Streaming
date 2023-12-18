@@ -5,6 +5,12 @@ import Image from "next/image";
 import YouTube from "react-youtube";
 import { useRouter } from "next/router";
 
+import {
+  MY_LIST_ADD_ITEM,
+  MY_LIST_REMOVE_ITEM,
+  MY_LIST_CHECK_ITEM,
+} from "../../constants/apiEndpoints";
+
 interface Video {
   key: string;
   name: string;
@@ -19,7 +25,7 @@ interface MovieDetails {
   videos: { name: string; key: string; results: Video[] };
 }
 
-const API_URL = "https://api.themoviedb.org/3";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const MovieDetailsPage: React.FC = () => {
   const [movieDetails, setMovieDetails] = useState<MovieDetails | null>(null);
@@ -40,7 +46,7 @@ const MovieDetailsPage: React.FC = () => {
       if (isInMyList) {
         // Remove from My List
         await axios.post(
-          `http://localhost:8000/api/user/mylist/remove/${id}`,
+          MY_LIST_REMOVE_ITEM(id || ""),
           {},
           {
             headers: {
@@ -58,7 +64,7 @@ const MovieDetailsPage: React.FC = () => {
       } else {
         // Add to My List
         await axios.post(
-          `http://localhost:8000/api/user/mylist/add/${id}`,
+          MY_LIST_ADD_ITEM(id || ""),
           {
             id: movieDetails?.id,
             title: movieDetails?.title,
@@ -104,7 +110,7 @@ const MovieDetailsPage: React.FC = () => {
     const checkMyListStatus = async () => {
       try {
         const isInMyListResponse = await axios.get(
-          `http://localhost:8000/api/user/mylist/${id}`,
+          MY_LIST_CHECK_ITEM(id || ""),
           {
             headers: {
               "x-auth-token": `Bearer ${token || ""}`,
@@ -131,7 +137,7 @@ const MovieDetailsPage: React.FC = () => {
             `${API_URL}/movie/${id}`,
             {
               params: {
-                api_key: "7b269e05a4ae4f5629b1515cafb76014",
+                api_key: process.env.NEXT_PUBLIC_API_KEY,
                 append_to_response: "videos",
               },
             }
