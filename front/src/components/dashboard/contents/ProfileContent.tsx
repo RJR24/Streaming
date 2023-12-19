@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
+import { useRouter } from "next/router";
 import ProfilePictureUpload from "./ProfilePictureUpload";
 
 const ProfileContent = () => {
+  const router = useRouter();
+  const [showResetPassword, setShowResetPassword] = useState(false);
+
+  const handleResetPasswordClick = () => {
+    // Use router.push to navigate to the ResetPassword page
+    router.push("/resetPassword");
+  };
+  const handleChangeEmailClick = () => {
+    // Use router.push to navigate to the ResetPassword page
+    router.push("/changeEmail");
+  };
   return (
     <div id="content" className="bg-white/10 col-span-9 rounded-lg p-6">
       <div id="24h">
@@ -45,54 +57,10 @@ const ProfileContent = () => {
               </div>
             </div>
           </div>
-          <div className="bg-black/60 hover:bg-white/10  p-6 rounded-lg">
-            <div className="flex flex-row space-x-4 items-center">
-              <div id="stats-1">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  className="w-10 h-10 text-white"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <p className="text-blue-300 text-sm font-medium uppercase leading-4">
-                  Invoices
-                </p>
-                <p className="text-white font-bold text-2xl inline-flex items-center space-x-2">
-                  <span>+79</span>
-                  <span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      className="w-6 h-6"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"
-                      />
-                    </svg>
-                  </span>
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
       <div id="last-incomes">
-        <h1 className="font-bold py-4 uppercase">Categories</h1>
+        <h1 className="font-bold py-4 uppercase"></h1>
         <div
           id="stats"
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
@@ -100,38 +68,38 @@ const ProfileContent = () => {
           <div className="bg-black/60 hover:bg-white/10  to-white/5 rounded-lg">
             <ProfilePictureUpload />
           </div>
-          <div className="bg-black/60 hover:bg-white/10  to-white/5 rounded-lg">
+          <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
             <div className="flex flex-row items-center">
-              <div className="text-3xl p-4">📺</div>
+              <div className=" p-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="32"
+                  width="36"
+                  viewBox="0 0 576 512"
+                >
+                  {/* ... (existing SVG path) */}
+                </svg>
+              </div>
               <div className="p-2">
-                <p className="text-xl font-bold">Email and Password</p>
+                <p className="text-xl font-bold">Manage Email and Password</p>
                 <p className="text-gray-500 font-medium">Maia Kipper</p>
                 <p className="text-gray-500 text-sm">23 Nov 2022</p>
               </div>
             </div>
             <div className="border-t border-white/5 p-4">
+              {/* If showResetPassword is true, render ResetPassword component */}
+
               <a
                 href="#"
                 className="inline-flex space-x-2 items-center text-center"
+                 // Handle click to show ResetPassword
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-                <span className="hover:text-indigo-400">click to change</span>
+                <span className="hover:text-indigo-400" onClick={handleResetPasswordClick}>password</span>
+                <span className="hover:text-indigo-400" onClick={handleChangeEmailClick}>email</span>
               </a>
             </div>
           </div>
+
           <div className="bg-black/60 hover:bg-white/10  to-white/5 rounded-lg">
             <div className="flex flex-row items-center">
               <div className=" p-4">
@@ -176,138 +144,10 @@ const ProfileContent = () => {
               </a>
             </div>
           </div>
-          <div className="bg-black/60 hover:bg-white/10  to-white/5 rounded-lg">
-            <div className="flex flex-row items-center">
-              <div className="text-3xl p-4">⏳</div>
-              <div className="p-2">
-                <p className="text-xl font-bold">Upcoming Movies</p>
-                <p className="text-gray-500 font-medium">Jonny Nite</p>
-                <p className="text-gray-500 text-sm">23 Nov 2022</p>
-              </div>
-            </div>
-            <div className="border-t border-white/5 p-4">
-              <a
-                href="#"
-                className="inline-flex space-x-2 items-center text-center"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-                <span>See more</span>
-              </a>
-            </div>
-          </div>
-          <div className="bg-black/60 to-white/5 rounded-lg">
-            <div className="flex flex-row items-center">
-              <div className="text-3xl p-4">🥇</div>
-              <div className="p-2">
-                <p className="text-xl font-bold">Today's Top10</p>
-                <p className="text-gray-500 font-medium">Megane Baile</p>
-                <p className="text-gray-500 text-sm">22 Nov 2022</p>
-              </div>
-            </div>
-            <div className="border-t border-white/5 p-4">
-              <a
-                href="#"
-                className="inline-flex space-x-2 items-center text-center"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-                <span>See more</span>
-              </a>
-            </div>
-          </div>
-          <div className="bg-black/60 to-white/5 rounded-lg">
-            <div className="flex flex-row items-center">
-              <div className="text-3xl p-4">🚀</div>
-              <div className="p-2">
-                <p className="text-xl font-bold">Trending movies</p>
-                <p className="text-gray-500 font-medium">Tony Ankel</p>
-                <p className="text-gray-500 text-sm">22 Nov 2022</p>
-              </div>
-            </div>
-            <div className="border-t border-white/5 p-4">
-              <a
-                href="#"
-                className="inline-flex space-x-2 items-center text-center"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-                <span>See more</span>
-              </a>
-            </div>
-          </div>
-          <div className="bg-black/60 to-white/5 rounded-lg">
-            <div className="flex flex-row items-center">
-              <div className="text-3xl p-4">➕</div>
-              <div className="p-2">
-                <p className="text-xl font-bold">Add a new category</p>
-                <p className="text-gray-500 font-medium">Jonny Nite</p>
-                <p className="text-gray-500 text-sm">23 Nov 2022</p>
-              </div>
-            </div>
-            <div className="border-t border-white/5 p-4">
-              <a
-                href="#"
-                className="inline-flex space-x-2 items-center text-center"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-                <span>Click here to add</span>
-              </a>
-            </div>
-          </div>
         </div>
       </div>
       <div id="last-users">
-        <h1 className="font-bold py-4 uppercase">Last 24h users</h1>
+        <h1 className="font-bold py-4 uppercase">Last 24h Logins</h1>
         <div className="overflow-x-scroll">
           <table className="w-full whitespace-nowrap">
             <thead className="bg-black/60">
@@ -317,144 +157,7 @@ const ProfileContent = () => {
               <th className="text-left py-3 px-2">Status</th>
               <th className="text-left py-3 px-2 rounded-r-lg">Actions</th>
             </thead>
-            <tr key={1} className="border-b border-gray-700">
-              <td className="py-3 px-2 font-bold">
-                <div className="inline-flex space-x-3 items-center">
-                  <span>
-                    <img
-                      className="rounded-full w-8 h-8"
-                      src="https://images.generated.photos/tGiLEDiAbS6NdHAXAjCfpKoW05x2nq70NGmxjxzT5aU/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/OTM4ODM1LmpwZw.jpg"
-                      alt=""
-                    ></img>
-                  </span>
-                  <span>Thai Mei</span>
-                </div>
-              </td>
-              <td className="py-3 px-2">thai.mei@abc.com</td>
-              <td className="py-3 px-2">User</td>
-              <td className="py-3 px-2">Approved</td>
-              <td className="py-3 px-2">
-                <div className="inline-flex items-center space-x-3">
-                  <a href="" title="Edit" className="hover:text-white">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
-                      />
-                    </svg>
-                  </a>
-                  <a href="" title="Edit password" className="hover:text-white">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-                      />
-                    </svg>
-                  </a>
-                  <a href="" title="Suspend user" className="hover:text-white">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
-                      />
-                    </svg>
-                  </a>
-                </div>
-              </td>
-            </tr>
-            <tr key={2} className="border-b border-gray-700">
-              <td className="py-3 px-2 font-bold">
-                <div className="inline-flex space-x-3 items-center">
-                  <span>
-                    <img
-                      className="rounded-full w-8 h-8"
-                      src="https://images.generated.photos/tGiLEDiAbS6NdHAXAjCfpKoW05x2nq70NGmxjxzT5aU/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/OTM4ODM1LmpwZw.jpg"
-                      alt=""
-                    ></img>
-                  </span>
-                  <span>Thai Mei</span>
-                </div>
-              </td>
-              <td className="py-3 px-2">thai.mei@abc.com</td>
-              <td className="py-3 px-2">User</td>
-              <td className="py-3 px-2">Approved</td>
-              <td className="py-3 px-2">
-                <div className="inline-flex items-center space-x-3">
-                  <a href="" title="Edit" className="hover:text-white">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
-                      />
-                    </svg>
-                  </a>
-                  <a href="" title="Edit password" className="hover:text-white">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-                      />
-                    </svg>
-                  </a>
-                  <a href="" title="Suspend user" className="hover:text-white">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
-                      />
-                    </svg>
-                  </a>
-                </div>
-              </td>
-            </tr>
+
             <tr key={3} className="border-b border-gray-700">
               <td className="py-3 px-2 font-bold">
                 <div className="inline-flex space-x-3 items-center">
@@ -524,75 +227,7 @@ const ProfileContent = () => {
                 </div>
               </td>
             </tr>
-            <tr key={4} className="border-b border-gray-700">
-              <td className="py-3 px-2 font-bold">
-                <div className="inline-flex space-x-3 items-center">
-                  <span>
-                    <img
-                      className="rounded-full w-8 h-8"
-                      src="https://images.generated.photos/niCVbIBAm4hahzwS83HoEtcVEIactkKohOzgXWYY4lM/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/NTk4ODczLmpwZw.jpg"
-                      alt=""
-                    ></img>
-                  </span>
-                  <span>Marquez Spineli</span>
-                </div>
-              </td>
-              <td className="py-3 px-2">marquez.spineli@cba.com</td>
-              <td className="py-3 px-2">User</td>
-              <td className="py-3 px-2">Approved</td>
-              <td className="py-3 px-2">
-                <div className="inline-flex items-center space-x-3">
-                  <a href="" title="Edit" className="hover:text-white">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
-                      />
-                    </svg>
-                  </a>
-                  <a href="" title="Edit password" className="hover:text-white">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-                      />
-                    </svg>
-                  </a>
-                  <a href="" title="Suspend user" className="hover:text-white">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
-                      />
-                    </svg>
-                  </a>
-                </div>
-              </td>
-            </tr>
+
             <tr key={5} className="border-b border-gray-800">
               <td className="py-3 px-2 font-bold">
                 <div className="inline-flex space-x-3 items-center">

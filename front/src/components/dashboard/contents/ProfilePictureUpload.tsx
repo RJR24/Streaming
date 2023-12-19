@@ -31,7 +31,7 @@ const ProfilePictureUpload = () => {
         <div {...getRootProps()} className="inline-flex space-x-2 items-center text-center cursor-pointer">
           <input {...getInputProps()} />
           ➕
-          <span className="hover:text-indigo-400">change</span>
+          <span className="hover:text-indigo-400">add/change</span>
         </div>
       </div>
     </div>
