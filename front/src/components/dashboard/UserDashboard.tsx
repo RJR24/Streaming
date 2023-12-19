@@ -4,7 +4,7 @@ import Head from "next/head";
 import "./dashboard-styles.css";
 import DashboardContent from "./contents/DashboardContent";
 import ProfileContent from "./contents/ProfileContent";
-import ResetPassword from "./changePassword/ChangeEmailPasswordForm";
+import ResetPassword from "./changePassword/ChangePasswordForm";
 
 const UserDashboard = () => {
   return (
