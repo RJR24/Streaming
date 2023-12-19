@@ -11,6 +11,9 @@ interface IUser extends Document {
     title: string;
     imageUrl: string;
   }[];
+  phoneNumber?: string;
+  dateOfBirth?: Date;
+  subscriptionStatus: "free" | "basic" | "premium";
 }
 
 const userSchema = new Schema<IUser>(
@@ -54,10 +57,20 @@ const userSchema = new Schema<IUser>(
         },
       },
     ],
+    phoneNumber: {
+      type: String,
+    },
+    dateOfBirth: {
+      type: Date,
+    },
+    subscriptionStatus: {
+      type: String,
+      enum: ["free", "basic", "premium"],
+      default: "free",
+    },
   },
   {
-    timestamps: true, // Adds createdAt and updatedAt fields
-  }
+    timestamps: true,
 );
 
 const UserModel = model<IUser>("User", userSchema);
