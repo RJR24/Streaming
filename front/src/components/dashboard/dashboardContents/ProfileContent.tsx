@@ -41,7 +41,7 @@ const ProfileContent = () => {
                 </svg>
               </div>
               <div>
-                <p className="text-indigo-300 font-bold text-xl inline-flex items-center space-x-2">
+                <p className="text-indigo-400 font-bold text-xl inline-flex items-center space-x-2">
                   <span>Kaveh Jami</span>
                 </p>
               </div>
@@ -51,7 +51,7 @@ const ProfileContent = () => {
             <div className="flex flex-row space-x-4 items-center">
               <div id="stats-1"></div>
               <div>
-                <p className="text-teal-300 font-bold text-xl inline-flex items-center space-x-2">
+                <p className="text-indigo-400 font-bold text-xl inline-flex items-center space-x-2">
                   <span>KavehJami@gmail.com</span>
                 </p>
               </div>
@@ -76,26 +76,34 @@ const ProfileContent = () => {
                   height="32"
                   width="36"
                   viewBox="0 0 576 512"
-                >
-                  {/* ... (existing SVG path) */}
-                </svg>
+                ></svg>
               </div>
               <div className="p-2">
-                <p className="text-xl font-bold">Manage Email and Password</p>
-                <p className="text-gray-500 font-medium">Maia Kipper</p>
-                <p className="text-gray-500 text-sm">23 Nov 2022</p>
+                <p className="text-xl font-bold">Change Email and Password</p>
+                {/* <p className="text-gray-500 font-medium">Maia Kipper</p>
+                <p className="text-gray-500 text-sm">23 Nov 2022</p> */}
               </div>
             </div>
             <div className="border-t border-white/5 p-4">
-              {/* If showResetPassword is true, render ResetPassword component */}
-
               <a
                 href="#"
-                className="inline-flex space-x-2 items-center text-center"
-                 // Handle click to show ResetPassword
+                className="flex space-x-2 items-center text-center"
               >
-                <span className="hover:text-indigo-400" onClick={handleResetPasswordClick}>password</span>
-                <span className="hover:text-indigo-400" onClick={handleChangeEmailClick}>email</span>
+                <span
+                  // Handle click to show ResetPassword
+                  className="hover:text-indigo-400"
+                  onClick={handleResetPasswordClick}
+                >
+                  password
+                </span>
+
+                <span
+                  // Handle click to show ResetPassword
+                  className="hover:text-indigo-400"
+                  onClick={handleChangeEmailClick}
+                >
+                  email
+                </span>
               </a>
             </div>
           </div>
@@ -158,7 +166,7 @@ const ProfileContent = () => {
               <th className="text-left py-3 px-2 rounded-r-lg">Actions</th>
             </thead>
 
-            <tr key={3} className="border-b border-gray-700">
+            <tr key={0} className="border-b hover:bg-white/10 border-gray-700">
               <td className="py-3 px-2 font-bold">
                 <div className="inline-flex space-x-3 items-center">
                   <span>
@@ -227,22 +235,21 @@ const ProfileContent = () => {
                 </div>
               </td>
             </tr>
-
-            <tr key={5} className="border-b border-gray-800">
+            <tr key={0} className="border-b hover:bg-white/10 border-gray-700">
               <td className="py-3 px-2 font-bold">
                 <div className="inline-flex space-x-3 items-center">
                   <span>
                     <img
                       className="rounded-full w-8 h-8"
-                      src="https://images.generated.photos/f_xU7q780YXiKG7IwKVV05eU6Sj2nIodEkN1S8GyM2M/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/NDk2MTc4LmpwZw.jpg"
+                      src="https://images.generated.photos/tGiLEDiAbS6NdHAXAjCfpKoW05x2nq70NGmxjxzT5aU/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/OTM4ODM1LmpwZw.jpg"
                       alt=""
                     ></img>
                   </span>
-                  <span>Mark Spike</span>
+                  <span>Thai Mei</span>
                 </div>
               </td>
-              <td className="py-3 px-2">mark.spike@abc.com</td>
-              <td className="py-3 px-2">Administrator</td>
+              <td className="py-3 px-2">thai.mei@abc.com</td>
+              <td className="py-3 px-2">User</td>
               <td className="py-3 px-2">Approved</td>
               <td className="py-3 px-2">
                 <div className="inline-flex items-center space-x-3">
