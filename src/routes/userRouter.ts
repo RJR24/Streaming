@@ -7,9 +7,10 @@ import {
   updateUserProfile,
   getMyListMovieDetails,
   userMoviesList,
+  getUsersList,
 } from "../controllers/userController";
 import { addToMyList, removeFromMyList } from "../controllers/userController";
-import { isLoggedIn } from "../middlewares/auth";
+import { isAdmin, isLoggedIn } from "../middlewares/auth";
 
 const userRouter = Router();
 
@@ -31,5 +32,7 @@ userRouter.post(
 userRouter.get("/api/user/myList/:movieId", isLoggedIn, getMyListMovieDetails);
 // Get User Movie List
 userRouter.get("/api/user/myList/", isLoggedIn, userMoviesList);
+
+userRouter.get("/api/usersList", isLoggedIn, isAdmin, getUsersList);
 
 export default userRouter;
