@@ -338,11 +338,24 @@ const userMoviesList = async (req: Request, res: Response) => {
       return res.status(200).json({ myList: user.myList });
     } else {
       return res.status(200).json({
-        MyList: { myList: []},
+        MyList: { myList: [] },
       });
     }
   } catch (error: any) {
     console.error("Error fetching movie List:", error);
+    return res.status(500).json({
+      error: "Internal server error",
+      message: error.message || "Unknown error occurred",
+    });
+  }
+};
+const getUsersList = async (req: Request, res: Response) => {
+  try {
+    const users = await UserModel.find({}, { password: 0 });
+
+    return res.status(200).json({ users });
+  } catch (error: any) {
+    console.error("Error fetching users list:", error);
     return res.status(500).json({
       error: "Internal server error",
       message: error.message || "Unknown error occurred",
@@ -360,4 +373,5 @@ export {
   addToMyList,
   getMyListMovieDetails,
   userMoviesList,
+  getUsersList,
 };
