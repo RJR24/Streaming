@@ -1,10 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import ProfilePictureUpload from "./ProfilePictureUpload";
 
 const ProfileContent = () => {
   const router = useRouter();
   const [showResetPassword, setShowResetPassword] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
+  const updateAvatarUrl = (url: string) => {
+    setAvatarUrl(url);
+    localStorage.setItem("avatarUrl", url); // Save to local storage
+  };
+
+  useEffect(() => {
+    const authToken = localStorage.getItem('x-auth-token');
+  
+    if (!authToken) {
+      console.error('Authentication token is missing.');
+      // Handle the case where the token is missing (redirect to login, etc.)
+      return;
+    }
+  
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/profile", {
+      headers: {
+        'x-auth-token': authToken, // Change this line
+      },
+    });
+  
+        if (response.ok) {
+          const userData = await response.json();
+          const storedAvatarUrl = localStorage.getItem('avatarUrl');
+          setAvatarUrl(storedAvatarUrl || userData.avatar || "");
+        } else {
+          console.error("Error fetching user data:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+  
+    fetchUserData();
+  }, []);
+  
 
   const handleResetPasswordClick = () => {
     // Use router.push to navigate to the ResetPassword page
@@ -66,7 +105,7 @@ const ProfileContent = () => {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
         >
           <div className="bg-black/60 hover:bg-white/10  to-white/5 rounded-lg">
-            <ProfilePictureUpload />
+            <ProfilePictureUpload setAvatarUrl={setAvatarUrl} />
           </div>
           <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
             <div className="flex flex-row items-center">
@@ -85,10 +124,7 @@ const ProfileContent = () => {
               </div>
             </div>
             <div className="border-t border-white/5 p-4">
-              <a
-                href="#"
-                className="flex space-x-2 items-center text-center"
-              >
+              <a href="#" className="flex space-x-2 items-center text-center">
                 <span
                   // Handle click to show ResetPassword
                   className="hover:text-indigo-400"
