@@ -5,12 +5,30 @@ import "./dashboard-styles.css";
 import DashboardContent from "./dashboardContents/MainDashboardContent";
 import ProfileContent from "./dashboardContents/ProfileContent";
 import UsersManagement from "./dashboardContents/UsersManagement";
+import axios from "axios";
+import { useRouter } from "next/router";
 
 const UserDashboard = () => {
   const [activeContent, setActiveContent] = useState("dashboard");
-
+  const router = useRouter();
   const handleMenuClick = (content: string) => {
     setActiveContent(content);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const authToken = localStorage.getItem("x-auth-token");
+      // Make a request to logout endpoint
+      await axios.post("http://localhost:8000/auth/logout", null, {
+        headers: {
+          "x-auth-token": authToken,
+        },
+      });
+      // Redirect to login
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
   };
   return (
     <div>
@@ -178,12 +196,12 @@ const UserDashboard = () => {
                         />
                       </svg>
                     </div>
-                    <div>
+                    <div onClick={handleLogout}>
                       <p className="font-bold text-base lg:text-lg text-slate-200 leading-4 group-hover:text-indigo-400">
-                        Settings
+                        Logout
                       </p>
                       <p className="text-slate-400 text-sm hidden md:block">
-                        Edit settings
+                        User logout
                       </p>
                     </div>
                   </div>
