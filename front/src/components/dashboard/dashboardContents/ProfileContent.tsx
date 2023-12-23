@@ -6,33 +6,51 @@ const ProfileContent = () => {
   const router = useRouter();
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string>("");
+
+  const updateUserId = (id: string) => {
+    setUserId(id);
+  };
 
   const updateAvatarUrl = (url: string) => {
     setAvatarUrl(url);
-    localStorage.setItem("avatarUrl", url); // Save to local storage
+
+    // Check if userId is available before setting local storage
+    if (userId) {
+      localStorage.setItem(`avatarUrl_${userId}`, url);
+    }
   };
 
   useEffect(() => {
-    const authToken = localStorage.getItem('x-auth-token');
-  
+    const authToken = localStorage.getItem("x-auth-token");
+
     if (!authToken) {
-      console.error('Authentication token is missing.');
-      // Handle the case where the token is missing (redirect to login, etc.)
+      console.error("Authentication token is missing.");
+      router.push("/login");
       return;
     }
-  
+
     const fetchUserData = async () => {
       try {
         const response = await fetch("http://localhost:8000/profile", {
-      headers: {
-        'x-auth-token': authToken, // Change this line
-      },
-    });
-  
+          headers: {
+            "x-auth-token": authToken,
+          },
+        });
+
         if (response.ok) {
           const userData = await response.json();
-          const storedAvatarUrl = localStorage.getItem('avatarUrl');
+          const storedAvatarUrl = localStorage.getItem(
+            `avatarUrl_${userData?._id}`
+          );
           setAvatarUrl(storedAvatarUrl || userData.avatar || "");
+
+          // Use _id directly as the user ID
+          const userId = userData?._id;
+          if (userId) {
+            // Pass userId as a prop to ProfilePictureUpload
+            setUserId(userId);
+          }
         } else {
           console.error("Error fetching user data:", response.statusText);
         }
@@ -40,10 +58,9 @@ const ProfileContent = () => {
         console.error("Error fetching user data:", error);
       }
     };
-  
+
     fetchUserData();
-  }, []);
-  
+  }, [router]);
 
   const handleResetPasswordClick = () => {
     // Use router.push to navigate to the ResetPassword page
@@ -105,7 +122,11 @@ const ProfileContent = () => {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
         >
           <div className="bg-black/60 hover:bg-white/10  to-white/5 rounded-lg">
-            <ProfilePictureUpload setAvatarUrl={setAvatarUrl} />
+            <ProfilePictureUpload
+              setAvatarUrl={updateAvatarUrl}
+              userId={userId}
+              updateUserId={updateUserId}
+            />
           </div>
           <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
             <div className="flex flex-row items-center">
