@@ -3,7 +3,7 @@ import Head from "next/head";
 
 import "./dashboard-styles.css";
 import DashboardContent from "./dashboardContents/MainDashboardContent";
-import ProfileContent from "./dashboardContents/ProfileContent";
+import ProfileContent from "./dashboardContents/profileContent/ProfileContent";
 import UsersManagement from "./dashboardContents/UsersManagement";
 import axios from "axios";
 import { useRouter } from "next/router";

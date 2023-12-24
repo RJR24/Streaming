@@ -124,12 +124,12 @@ const ProfileContent = () => {
         >
           <div className="bg-black/60 hover:bg-white/10  to-white/5 rounded-lg">
             {userId && (
-        <ProfilePictureUpload
-          setAvatarUrl={updateAvatarUrl}
-          userId={userId}
-          updateUserId={updateUserId}
-        />
-      )}
+              <ProfilePictureUpload
+                setAvatarUrl={updateAvatarUrl}
+                userId={userId}
+                updateUserId={updateUserId}
+              />
+            )}
           </div>
           <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
             <div className="flex flex-row items-center">
