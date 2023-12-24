@@ -4,9 +4,11 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Joi from "joi";
-import UserModel from "../models/UserModel";
+
+import UserModel, { IUser } from "../models/UserModel";
 import TokenBlackList from "../models/tokenBlackList";
 
+// import  { IUser } from '../models/UserModel'; // Update the path accordingly
 const saltRounds = 10;
 const jwtSecret = process.env.JWT_SECRET!;
 
@@ -42,7 +44,8 @@ const updateUserProfileSchema = Joi.object({
   dateOfBirth: Joi.date().iso().optional(), // Optional date in ISO format
 });
 
-const updateProfilePictureSchema = Joi.object({
+// Define Joi schema for updateProfilePicture endpoint
+const uploadProfilePictureSchema = Joi.object({
   file: Joi.object({
     path: Joi.string().required(),
   }).required(),
@@ -50,11 +53,14 @@ const updateProfilePictureSchema = Joi.object({
 
 // Extend the existing Request type to include the 'file' property
 interface RequestWithFile extends Request {
-  file: {
-    path: string;
-    // Add more properties based on your file structure
+  file: any; // Adjust the type according to your file handling approach
+  params: {
+    userId: string;
   };
 }
+
+///////////////////////////////
+
 const registerUser = async (req: Request, res: Response) => {
   try {
     const { error, value } = registerSchema.validate(req.body);
@@ -197,6 +203,7 @@ const getUserProfile = async (req: Request, res: Response) => {
     });
   }
 };
+
 const updateUserProfile = async (req: Request, res: Response) => {
   try {
     // Extract data from request body
@@ -268,58 +275,39 @@ const updateUserProfile = async (req: Request, res: Response) => {
   }
 };
 
-const updateProfilePicture = async (req: Request, res: Response) => {
+const uploadProfilePicture = async (
+  req: RequestWithFile,
+  res: Response
+): Promise<Response<any, Record<string, any>>> => {
   try {
-    // Extract data from request file
+    const userId = req.params.userId; // Extract userId from request parameters
     const { file } = req;
 
-    // Validate the data using Joi schema
-    const { error, value } = updateProfilePictureSchema.validate({ file });
-
-    if (error) {
-      return res.status(400).json({
-        error: "Validation error",
-        message: error.details[0].message,
-      });
+    if (!file) {
+      return res.status(400).json({ error: "No file uploaded" });
     }
 
-    // Extract validated data
-    const { file: validatedFile } = value;
-
-    // Get the user ID from the authenticated user
-    const userId = req.user?._id;
-
-    // Ensure the user is authenticated
-    if (!userId) {
-      return res.status(401).json({
-        error: "Unauthorized",
-        message: "User not authenticated",
-      });
-    }
-
-    // Save the file or URL to user's profile picture in the database
     const updatedUser = await UserModel.findByIdAndUpdate(
       userId,
-      { avatar: validatedFile.path || /* URL for cloud storage */ },
+      { avatar: file.path }, // Assuming you store the file path in 'file.path'
       { new: true }
     );
 
     if (!updatedUser) {
-      return res.status(404).json({
-        error: "Not Found",
-        message: "User not found",
-      });
+      return res.status(404).json({ error: "User not found" });
     }
 
-    return res.status(200).json({
-      message: "Profile picture updated successfully!",
-      data: updatedUser,
-    });
-  } catch (error: unknown) {
-    console.error("Error updating profile picture:", error);
+    return res
+      .status(200)
+      .json({
+        message: "Profile picture uploaded successfully",
+        user: updatedUser,
+      });
+  } catch (error: any) {
+    console.error("Error uploading profile picture:", error);
     return res.status(500).json({
       error: "Internal server error",
-      message: (error as Error).message,
+      message: error.message,
     });
   }
 };
@@ -379,6 +367,7 @@ const removeFromMyList = async (req: Request, res: Response) => {
     });
   }
 };
+
 const getMyListMovieDetails = async (req: Request, res: Response) => {
   const { movieId } = req.params;
   const userId = req.user._id;
@@ -411,6 +400,7 @@ const getMyListMovieDetails = async (req: Request, res: Response) => {
     });
   }
 };
+
 const userMoviesList = async (req: Request, res: Response) => {
   const { movieId } = req.params;
   const userId = req.user._id;
@@ -440,6 +430,7 @@ const userMoviesList = async (req: Request, res: Response) => {
     });
   }
 };
+
 const getUsersList = async (req: Request, res: Response) => {
   try {
     const users = await UserModel.find({}, { password: 0 });
@@ -465,4 +456,5 @@ export {
   getMyListMovieDetails,
   userMoviesList,
   getUsersList,
+  uploadProfilePicture,
 };
