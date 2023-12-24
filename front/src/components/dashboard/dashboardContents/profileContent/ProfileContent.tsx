@@ -7,6 +7,7 @@ const ProfileContent = () => {
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [userId, setUserId] = useState<string>("");
+  const [editMode, setEditMode] = useState(false); // New state for edit mode
 
   const updateUserId = (id: string) => {
     setUserId(id);
@@ -67,12 +68,19 @@ const ProfileContent = () => {
     // Use router.push to navigate to the ResetPassword page
     router.push("/resetPassword");
   };
+
   const handleChangeEmailClick = () => {
     // Use router.push to navigate to the ResetPassword page
     router.push("/changeEmail");
   };
+
+  const handleEditClick = () => {
+    // Toggle edit mode
+    setEditMode(!editMode);
+  };
   return (
     <div id="content" className="bg-white/10 col-span-9 rounded-lg p-6">
+      (
       <div id="24h">
         <h1 className="font-bold py-4 uppercase">Account Information</h1>
         <div
