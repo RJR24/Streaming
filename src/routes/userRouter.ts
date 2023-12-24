@@ -8,6 +8,7 @@ import {
   getMyListMovieDetails,
   userMoviesList,
   getUsersList,
+  uploadProfilePicture,
 } from "../controllers/userController";
 import { addToMyList, removeFromMyList } from "../controllers/userController";
 import { isAdmin, isLoggedIn } from "../middlewares/auth";
@@ -34,5 +35,12 @@ userRouter.get("/api/user/myList/:movieId", isLoggedIn, getMyListMovieDetails);
 userRouter.get("/api/user/myList/", isLoggedIn, userMoviesList);
 
 userRouter.get("/api/usersList", isLoggedIn, isAdmin, getUsersList);
+
+// Route to handle file upload
+// userRouter.post(
+//   "/users/:userId/upload-profile-picture",
+//   isLoggedIn,
+//   uploadProfilePicture
+// );
 
 export default userRouter;
