@@ -36,10 +36,25 @@ const loginSchema = Joi.object({
 
 // Validation schema for updating user profile
 const updateUserProfileSchema = Joi.object({
-  name: Joi.string().max(50), // Adjust the maximum length as needed
-  email: Joi.string().email(),
+  name: Joi.string().required(),
+  email: Joi.string().email().required(),
+  phoneNumber: Joi.string().allow(null, "").optional(), // Optional, can be null or empty
+  dateOfBirth: Joi.date().iso().optional(), // Optional date in ISO format
 });
 
+const updateProfilePictureSchema = Joi.object({
+  file: Joi.object({
+    path: Joi.string().required(),
+  }).required(),
+});
+
+// Extend the existing Request type to include the 'file' property
+interface RequestWithFile extends Request {
+  file: {
+    path: string;
+    // Add more properties based on your file structure
+  };
+}
 const registerUser = async (req: Request, res: Response) => {
   try {
     const { error, value } = registerSchema.validate(req.body);
@@ -184,8 +199,16 @@ const getUserProfile = async (req: Request, res: Response) => {
 };
 const updateUserProfile = async (req: Request, res: Response) => {
   try {
-    // Validate user input
-    const { error, value } = updateUserProfileSchema.validate(req.body);
+    // Extract data from request body
+    const { name, email, phoneNumber, dateOfBirth } = req.body;
+
+    // Validate the data using Joi schema
+    const { error, value } = updateUserProfileSchema.validate({
+      name,
+      email,
+      phoneNumber,
+      dateOfBirth,
+    });
 
     if (error) {
       return res.status(400).json({
@@ -195,7 +218,14 @@ const updateUserProfile = async (req: Request, res: Response) => {
     }
 
     // Extract validated data
-    const { name, email } = value;
+    const {
+      name: validatedName,
+      email: validatedEmail,
+      phoneNumber: validatedPhoneNumber,
+      dateOfBirth: validatedDateOfBirth,
+    } = value;
+
+    // Get the user ID from the authenticated user
     const userId = req.user?._id;
 
     // Ensure the user is authenticated
@@ -206,10 +236,15 @@ const updateUserProfile = async (req: Request, res: Response) => {
       });
     }
 
-    // Update user profile
+    // Update user's personal information in the database
     const updatedUser = await UserModel.findByIdAndUpdate(
       userId,
-      { name, email },
+      {
+        name: validatedName,
+        email: validatedEmail,
+        phoneNumber: validatedPhoneNumber,
+        dateOfBirth: validatedDateOfBirth,
+      },
       { new: true }
     );
 
@@ -221,11 +256,67 @@ const updateUserProfile = async (req: Request, res: Response) => {
     }
 
     return res.status(200).json({
-      message: "User profile updated successfully!",
+      message: "Personal information updated successfully!",
       data: updatedUser,
     });
   } catch (error: unknown) {
-    console.error("Error updating user profile:", error);
+    console.error("Error updating personal information:", error);
+    return res.status(500).json({
+      error: "Internal server error",
+      message: (error as Error).message,
+    });
+  }
+};
+
+const updateProfilePicture = async (req: Request, res: Response) => {
+  try {
+    // Extract data from request file
+    const { file } = req;
+
+    // Validate the data using Joi schema
+    const { error, value } = updateProfilePictureSchema.validate({ file });
+
+    if (error) {
+      return res.status(400).json({
+        error: "Validation error",
+        message: error.details[0].message,
+      });
+    }
+
+    // Extract validated data
+    const { file: validatedFile } = value;
+
+    // Get the user ID from the authenticated user
+    const userId = req.user?._id;
+
+    // Ensure the user is authenticated
+    if (!userId) {
+      return res.status(401).json({
+        error: "Unauthorized",
+        message: "User not authenticated",
+      });
+    }
+
+    // Save the file or URL to user's profile picture in the database
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      userId,
+      { avatar: validatedFile.path || /* URL for cloud storage */ },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        error: "Not Found",
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Profile picture updated successfully!",
+      data: updatedUser,
+    });
+  } catch (error: unknown) {
+    console.error("Error updating profile picture:", error);
     return res.status(500).json({
       error: "Internal server error",
       message: (error as Error).message,
