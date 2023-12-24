@@ -41,12 +41,13 @@ const ProfileContent = () => {
         if (response.ok) {
           const userData = await response.json();
           const storedAvatarUrl = localStorage.getItem(
-            `avatarUrl_${userData?._id}`
+            `avatarUrl_${userData.data?._id}`
           );
-          setAvatarUrl(storedAvatarUrl || userData.avatar || "");
+          setAvatarUrl(storedAvatarUrl || userData?.data?.avatar || "");
 
           // Use _id directly as the user ID
-          const userId = userData?._id;
+          const userId = userData.data?._id;
+
           if (userId) {
             // Pass userId as a prop to ProfilePictureUpload
             setUserId(userId);
@@ -122,11 +123,13 @@ const ProfileContent = () => {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
         >
           <div className="bg-black/60 hover:bg-white/10  to-white/5 rounded-lg">
-            <ProfilePictureUpload
-              setAvatarUrl={updateAvatarUrl}
-              userId={userId}
-              updateUserId={updateUserId}
-            />
+            {userId && (
+        <ProfilePictureUpload
+          setAvatarUrl={updateAvatarUrl}
+          userId={userId}
+          updateUserId={updateUserId}
+        />
+      )}
           </div>
           <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
             <div className="flex flex-row items-center">
@@ -292,7 +295,7 @@ const ProfileContent = () => {
                 </div>
               </td>
             </tr>
-            <tr key={0} className="border-b hover:bg-white/10 border-gray-700">
+            <tr key={1} className="border-b hover:bg-white/10 border-gray-700">
               <td className="py-3 px-2 font-bold">
                 <div className="inline-flex space-x-3 items-center">
                   <span>
