@@ -1,6 +1,6 @@
 /// <reference path="../custom.d.ts" />
 
-import { Request, Response } from "express";
+import { Request, Response, RequestParamHandler  } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Joi from "joi";
@@ -53,10 +53,20 @@ const uploadProfilePictureSchema = Joi.object({
 
 // Extend the existing Request type to include the 'file' property
 interface RequestWithFile extends Request {
-  file: any; // Adjust the type according to your file handling approach
+  file: {
+    fieldname: string;
+    originalname: string;
+    encoding: string;
+    mimetype: string;
+    size: number;
+    destination: string;
+    filename: string;
+    path: string;
+  };
   params: {
     userId: string;
   };
+ 
 }
 
 ///////////////////////////////
@@ -275,14 +285,16 @@ const updateUserProfile = async (req: Request, res: Response) => {
   }
 };
 
-const uploadProfilePicture = async (
+const uploadProfilePicture  = async (
   req: RequestWithFile,
   res: Response
 ): Promise<Response<any, Record<string, any>>> => {
   try {
     const userId = req.params.userId; // Extract userId from request parameters
-    const { file } = req;
+    const { file } = req.body;
 
+    console.log(file);
+    
     if (!file) {
       return res.status(400).json({ error: "No file uploaded" });
     }

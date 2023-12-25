@@ -27,6 +27,7 @@ const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({
     }
   }, [userId]);
 
+
   const onDrop = useCallback(
     (acceptedFiles) => {
       const file = acceptedFiles[0];
@@ -60,7 +61,36 @@ const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({
   );
   
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const uploadImage = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+  
+      // Create FormData object
+      const formData = new FormData();
+      formData.append("file", file);
+  
+      // Make a POST request to the server endpoint to handle file upload
+      fetch("http://localhost:8000/uploadProfilePicture", {
+        method: "POST",
+        headers: {
+          // Include any necessary headers, e.g., authorization headers
+        },
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          const imageUrl = data.avatarUrl;
+          setAvatarUrl(imageUrl);
+          localStorage.setItem(`avatarUrl_${userId}`, imageUrl);
+        })
+        .catch((error) => {
+          console.error("Error uploading profile picture:", error);
+        });
+    },
+    [setAvatarUrl, userId]
+  );
+
+  // const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
     <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
@@ -79,11 +109,13 @@ const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({
       </div>
       <div className="border-t border-white/5 p-4">
         <div
-          {...getRootProps()}
+          // {...getRootProps()}
           className="inline-flex space-x-2 items-center text-center cursor-pointer"
         >
-          <input {...getInputProps()} />➕
+          {/* <input {...getInputProps()} />➕ */}
+          <input type="file" onChange={uploadImage} />➕
           <span className="hover:text-indigo-400">add/change</span>
+        
         </div>
       </div>
     </div>

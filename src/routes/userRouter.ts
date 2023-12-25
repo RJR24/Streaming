@@ -37,10 +37,7 @@ userRouter.get("/api/user/myList/", isLoggedIn, userMoviesList);
 userRouter.get("/api/usersList", isLoggedIn, isAdmin, getUsersList);
 
 // Route to handle file upload
-// userRouter.post(
-//   "/users/:userId/upload-profile-picture",
-//   isLoggedIn,
-//   uploadProfilePicture
-// );
+userRouter.post("/users/:userId/upload-profile-picture",isLoggedIn,uploadProfilePicture);
 
 export default userRouter;
+

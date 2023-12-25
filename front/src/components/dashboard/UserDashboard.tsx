@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+"use clientSide";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 
 import "./dashboard-styles.css";
@@ -7,10 +8,12 @@ import ProfileContent from "./dashboardContents/profileContent/ProfileContent";
 import UsersManagement from "./dashboardContents/UsersManagement";
 import axios from "axios";
 import { useRouter } from "next/router";
+import UserPersonalInfo from "./dashboardContents/profileContent/userPersonalInfo";
 
 const UserDashboard = () => {
-  const [activeContent, setActiveContent] = useState("dashboard");
+  const [activeContent, setActiveContent] = useState("");
   const router = useRouter();
+
   const handleMenuClick = (content: string) => {
     setActiveContent(content);
   };
@@ -30,6 +33,13 @@ const UserDashboard = () => {
       console.error("Logout failed", error);
     }
   };
+
+  useEffect(() => {
+    setActiveContent("dashboard");
+  }, []);
+
+
+
   return (
     <div>
       <div>
@@ -213,6 +223,7 @@ const UserDashboard = () => {
             </div>
             {activeContent === "dashboard" && <DashboardContent />}
             {activeContent === "profile" && <ProfileContent />}
+            {/* {activeContent === "profile" && <UserPersonalInfo />} */}
             {activeContent === "users" && <UsersManagement />}
           </div>
         </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import ProfilePictureUpload from "./ProfilePictureUpload";
+import UserPersonalInfo from "./userPersonalInfo";
 
 const ProfileContent = () => {
   const router = useRouter();
@@ -80,7 +81,10 @@ const ProfileContent = () => {
   };
   return (
     <div id="content" className="bg-white/10 col-span-9 rounded-lg p-6">
-      (
+       {editMode ? (
+      <UserPersonalInfo />
+    ) : (
+      <div>
       <div id="24h">
         <h1 className="font-bold py-4 uppercase">Account Information</h1>
         <div
@@ -375,7 +379,9 @@ const ProfileContent = () => {
           </table>
         </div>
       </div>
-    </div>
+
+      </div>)}
+          </div>
   );
 };
 
