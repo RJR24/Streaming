@@ -21,12 +21,12 @@ const toggleMyList = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         if (!user) {
             return res.status(404).json({ error: "User not found" });
         }
-        const movieIndex = user.myList.indexOf(movieId);
-        if (movieIndex === -1) {
-            user.myList.push(movieId);
+        const movieIndex = user.myList.some((movie) => movie.id === movieId);
+        if (!movieIndex) {
+            user.myList.push({ id: movieId, title: "", imageUrl: "" });
         }
         else {
-            user.myList.splice(movieIndex, 1);
+            user.myList = user.myList.filter((movie) => movie.id !== movieId);
         }
         yield user.save();
         return res.status(200).json({ success: true });
