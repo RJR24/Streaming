@@ -1,6 +1,7 @@
 /// <reference path="../custom.d.ts" />
 
-import { Request, Response, RequestParamHandler  } from "express";
+
+import { Request, Response, RequestParamHandler } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Joi from "joi";
@@ -66,7 +67,6 @@ interface RequestWithFile extends Request {
   params: {
     userId: string;
   };
- 
 }
 
 ///////////////////////////////
@@ -285,23 +285,23 @@ const updateUserProfile = async (req: Request, res: Response) => {
   }
 };
 
-const uploadProfilePicture  = async (
+const uploadProfilePictureHandler = async (
   req: RequestWithFile,
   res: Response
 ): Promise<Response<any, Record<string, any>>> => {
   try {
-    const userId = req.params.userId; // Extract userId from request parameters
+    const userId = req.params.userId;
     const { file } = req.body;
 
     console.log(file);
-    
+
     if (!file) {
       return res.status(400).json({ error: "No file uploaded" });
     }
 
     const updatedUser = await UserModel.findByIdAndUpdate(
       userId,
-      { avatar: file.path }, // Assuming you store the file path in 'file.path'
+      { avatar: file.path }, // store file path in 'file.path'
       { new: true }
     );
 
@@ -309,12 +309,10 @@ const uploadProfilePicture  = async (
       return res.status(404).json({ error: "User not found" });
     }
 
-    return res
-      .status(200)
-      .json({
-        message: "Profile picture uploaded successfully",
-        user: updatedUser,
-      });
+    return res.status(200).json({
+      message: "Profile picture uploaded successfully",
+      user: updatedUser,
+    });
   } catch (error: any) {
     console.error("Error uploading profile picture:", error);
     return res.status(500).json({
@@ -468,5 +466,5 @@ export {
   getMyListMovieDetails,
   userMoviesList,
   getUsersList,
-  uploadProfilePicture,
+  uploadProfilePictureHandler,
 };

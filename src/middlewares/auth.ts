@@ -43,6 +43,7 @@ export const isLoggedIn = async (
     res.status(401).json({ error: "Invalid token." });
   }
 };
+
 export const isAdmin = async (
   req: Request,
   res: Response,

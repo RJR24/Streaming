@@ -20,6 +20,7 @@ const userSchema = new mongoose_1.Schema({
     },
     avatar: {
         type: String,
+        default: "",
     },
     isAdmin: {
         type: Boolean,
@@ -27,9 +28,31 @@ const userSchema = new mongoose_1.Schema({
     },
     myList: [
         {
-            type: String,
+            id: {
+                type: String,
+                required: true,
+            },
+            title: {
+                type: String,
+                required: true,
+            },
+            imageUrl: {
+                type: String,
+                required: true,
+            },
         },
     ],
+    phoneNumber: {
+        type: String,
+    },
+    dateOfBirth: {
+        type: Date,
+    },
+    subscriptionStatus: {
+        type: String,
+        enum: ["free", "basic", "premium"],
+        default: "free",
+    },
 }, {
     timestamps: true,
 });

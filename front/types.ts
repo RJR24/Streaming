@@ -13,11 +13,3 @@ export interface Video {
   key: string;
 }
 
-
-import { Request } from 'express';
-
-interface RequestWithFile extends Request {
-  file: any; // Adjust the type according to your Multer configuration
-}
-
-export default RequestWithFile;

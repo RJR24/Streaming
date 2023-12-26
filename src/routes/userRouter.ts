@@ -8,7 +8,7 @@ import {
   getMyListMovieDetails,
   userMoviesList,
   getUsersList,
-  uploadProfilePicture,
+  uploadProfilePictureHandler,
 } from "../controllers/userController";
 import { addToMyList, removeFromMyList } from "../controllers/userController";
 import { isAdmin, isLoggedIn } from "../middlewares/auth";
@@ -37,7 +37,20 @@ userRouter.get("/api/user/myList/", isLoggedIn, userMoviesList);
 userRouter.get("/api/usersList", isLoggedIn, isAdmin, getUsersList);
 
 // Route to handle file upload
-userRouter.post("/users/:userId/upload-profile-picture",isLoggedIn,uploadProfilePicture);
+// userRouter.post("/users/:userId/upload-profile-picture",isLoggedIn,uploadProfilePicture);
+// Explicitly specify the type for the router and use the handler
+// userRouter.post<{ userId: string }>(
+//   "/users/:userId/upload-profile-picture",
+//   isLoggedIn,
+//   uploadProfilePictureHandler as RequestHandlerParams<
+//     { userId: string },
+//     any,
+//     any,
+//     ParsedQs,
+//     Record<string, any>
+//   >
+// );
+
+
 
 export default userRouter;
-

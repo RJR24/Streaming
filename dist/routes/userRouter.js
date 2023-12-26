@@ -13,5 +13,7 @@ userRouter.post("/auth/logout", userController_1.logoutUser);
 userRouter.post("/api/user/myList/add/:movieId", auth_1.isLoggedIn, userController_2.addToMyList);
 userRouter.post("/api/user/myList/remove/:movieId", auth_1.isLoggedIn, userController_2.removeFromMyList);
 userRouter.get("/api/user/myList/:movieId", auth_1.isLoggedIn, userController_1.getMyListMovieDetails);
+userRouter.get("/api/user/myList/", auth_1.isLoggedIn, userController_1.userMoviesList);
+userRouter.get("/api/usersList", auth_1.isLoggedIn, auth_1.isAdmin, userController_1.getUsersList);
 exports.default = userRouter;
 //# sourceMappingURL=userRouter.js.map
