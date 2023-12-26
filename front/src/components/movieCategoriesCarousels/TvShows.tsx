@@ -11,7 +11,7 @@ const TvShows = () => {
         imageUrl: `https://image.tmdb.org/t/p/w500/${movie.poster_path}`,
         id: movie.id,
       })}
-      title="Tv Show"
+      title="Tv Show on Netflix"
     />
   );
 };

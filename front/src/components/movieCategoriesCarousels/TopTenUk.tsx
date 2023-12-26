@@ -11,7 +11,7 @@ const Top10MoviesUK = () => {
         imageUrl: `https://image.tmdb.org/t/p/w500/${movie.poster_path}`,
         id: movie.id,
       })}
-      title="Today's Top 10 List in UK"
+      title="Today's Top 10"
     />
   );
 };
