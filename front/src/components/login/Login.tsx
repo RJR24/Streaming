@@ -17,7 +17,8 @@ const Login = () => {
   const formik = useFormik({
     initialValues: {
       email: "",
-      password: ""
+      password: "",
+      rememberMe: false,
     },
     validationSchema: Yup.object({
       email: Yup.string().email("Invalid email address").required("Required"),
@@ -26,9 +27,10 @@ const Login = () => {
     onSubmit: async (values, { setSubmitting }) => {
       try {
         console.log("Logging in with:", values);
+        const { rememberMe, ...loginData } = values;
         const response = await axios.post(
           "http://localhost:8000/auth/login",
-          values
+          loginData
         );
 
         console.log(response.data);
@@ -42,8 +44,14 @@ const Login = () => {
         // Set the token state for future use
         setToken(authToken);
 
-        handleSuccess();
-        router.push("/home");
+        handleSuccess(response);
+
+        // Redirect based on isAdmin
+        if (response.data.isAdmin) {
+          router.push("/dashboard");
+        } else {
+          router.push("/home");
+        }
       } catch (error) {
         handleError(error);
       } finally {
@@ -52,10 +60,12 @@ const Login = () => {
     },
   });
 
-  const handleSuccess = () => {
+  const handleSuccess = (response) => {
     Swal.fire({
       title: "Welcome!",
-      text: "You have successfully signed in.",
+      text: `You have successfully signed in as ${
+        response.data.isAdmin ? "Admin" : "User"
+      }.`,
       icon: "success",
       showConfirmButton: true,
     });
