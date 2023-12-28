@@ -48,7 +48,7 @@ const Login = () => {
 
         // Redirect based on isAdmin
         if (response.data.isAdmin) {
-          router.push("/dashboard");
+          router.push("/adminDashboard");
         } else {
           router.push("/home");
         }
