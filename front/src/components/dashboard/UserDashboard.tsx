@@ -5,7 +5,6 @@ import Head from "next/head";
 import "./dashboard-styles.css";
 import DashboardContent from "./dashboardContents/MainDashboardContent";
 import ProfileContent from "./dashboardContents/profileContent/ProfileContent";
-import UsersManagement from "./dashboardContents/UsersManagement";
 import axios from "axios";
 import { useRouter } from "next/router";
 import UserPersonalInfo from "./dashboardContents/profileContent/userPersonalInfo";
@@ -151,38 +150,6 @@ const UserDashboard = () => {
                 <a
                   href="#"
                   className="hover:bg-white/10 transition duration-150 ease-linear rounded-lg py-3 px-2 group"
-                  onClick={() => handleMenuClick("users")}
-                >
-                  <div className="flex flex-col space-y-2 md:flex-row md:space-y-0 space-x-2 items-center">
-                    <div>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        className="w-6 h-6 group-hover:text-indigo-400"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"
-                        />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="font-bold text-base lg:text-lg text-slate-200 leading-4 group-hover:text-indigo-400">
-                        Users
-                      </p>
-                      <p className="text-slate-400 text-sm hidden md:block">
-                        Manage users
-                      </p>
-                    </div>
-                  </div>
-                </a>
-                <a
-                  href="#"
-                  className="hover:bg-white/10 transition duration-150 ease-linear rounded-lg py-3 px-2 group"
                 >
                   <div className="flex flex-col space-y-2 md:flex-row md:space-y-0 space-x-2 items-center">
                     <div>
@@ -224,7 +191,6 @@ const UserDashboard = () => {
             {activeContent === "dashboard" && <DashboardContent />}
             {activeContent === "profile" && <ProfileContent />}
             {/* {activeContent === "profile" && <UserPersonalInfo />} */}
-            {activeContent === "users" && <UsersManagement />}
           </div>
         </div>
       </div>
