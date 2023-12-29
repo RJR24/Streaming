@@ -2,6 +2,7 @@ import Link from "next/link";
 import CategoryDataFetcher from "../../dataFetching/CategoryDataFetcher";
 
 const DashboardContent = () => {
+  const api_key = process.env.NEXT_PUBLIC_API_URL;
   return (
     <div id="content" className="bg-white/10 col-span-9 rounded-lg p-6">
       <div id="7DaysStatistics">
@@ -154,54 +155,99 @@ const DashboardContent = () => {
           id="stats"
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
         >
-<CategoryDataFetcher
-  categoryUrl="https://api.themoviedb.org/3/movie/popular?api_key=7b269e05a4ae4f5629b1515cafb76014"
-  transformFunction={(movie) => ({
-    title: movie.title,
-    imageUrl: `https://image.tmdb.org/t/p/w92/${movie.poster_path}`,
-    id: movie.id,
-  })}
->
-  {(data) => (
-    <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
-      <div className="flex flex-row items-center">
-        <div className="text-3xl p-4">🤩</div>
-        <div className="p-2">
-          <p className="text-xl font-bold">Popular on Netflix</p>
-          <p className="text-gray-500 font-medium">Amber Gates</p>
-          <p className="text-gray-500 text-sm">24 Nov 2022</p>
-        </div>
-      </div>
-      <div className="border-t border-white/5 p-4">
-        <Link
-          href="/admin/category/[category]"
-          as="/admin/category/popular-on-netflix"
-        >
-          <div className="inline-flex space-x-2 items-center text-center cursor-pointer">
-          <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-            <span>See more</span>
-          </div>
-        </Link>
-      </div>
-    </div>
-  )}
-</CategoryDataFetcher>
+          <CategoryDataFetcher
+            categoryUrl="https://api.themoviedb.org/3/movie/popular?api_key=7b269e05a4ae4f5629b1515cafb76014"
+            transformFunction={(movie) => ({
+              title: movie.title,
+              imageUrl: `https://image.tmdb.org/t/p/w92/${movie.poster_path}`,
+              id: movie.id,
+            })}
+          >
+            {(data) => (
+              <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
+                <div className="flex flex-row items-center">
+                  <div className="text-3xl p-4">🤩</div>
+                  <div className="p-2">
+                    <p className="text-xl font-bold">Popular on Netflix</p>
+                    <p className="text-gray-500 font-medium">Amber Gates</p>
+                    <p className="text-gray-500 text-sm">24 Nov 2022</p>
+                  </div>
+                </div>
+                <div className="border-t border-white/5 p-4">
+                  <Link
+                    href="/admin/category/[category]"
+                    as="/admin/category/popular-on-netflix"
+                  >
+                    <div className="inline-flex space-x-2 items-center text-center cursor-pointer">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                        />
+                      </svg>
+                      <span>See more</span>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            )}
+          </CategoryDataFetcher>
 
+          <CategoryDataFetcher
+            categoryUrl="https://api.themoviedb.org/3/trending/all/day?api_key=7b269e05a4ae4f5629b1515cafb76014"
+            transformFunction={(movie) => ({
+              title: movie.title,
+              imageUrl: `https://image.tmdb.org/t/p/w92/${movie.poster_path}`,
+              id: movie.id,
+            })}
+          >
+            {(data) => (
+              <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
+                <div className="flex flex-row items-center">
+                  <div className="text-3xl p-4">📺</div>
+                  <div className="p-2">
+                    <p className="text-xl font-bold">Tv Show on Netflix</p>
+                    <p className="text-gray-500 font-medium">Maia Kipper</p>
+                    <p className="text-gray-500 text-sm">23 Nov 2022</p>
+                  </div>
+                </div>
+                <div className="border-t border-white/5 p-4">
+                  <Link
+                    href="/admin/category/[category]"
+                    as="/admin/category/tv-shows-on-netflix"
+                  >
+                    <div className="inline-flex space-x-2 items-center text-center cursor-pointer">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                        />
+                      </svg>
+                      <span>See more</span>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            )}
+          </CategoryDataFetcher>
 
-          <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
+          {/* <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
             <div className="flex flex-row items-center">
               <div className="text-3xl p-4">📺</div>
               <div className="p-2">
@@ -232,8 +278,53 @@ const DashboardContent = () => {
                 <span>See more</span>
               </a>
             </div>
-          </div>
-          <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
+          </div> */}
+          <CategoryDataFetcher
+            categoryUrl="https://api.themoviedb.org/3/movie/popular?api_key=7b269e05a4ae4f5629b1515cafb76014"
+            transformFunction={(movie) => ({
+              title: movie.title,
+              imageUrl: `https://image.tmdb.org/t/p/w92/${movie.poster_path}`,
+              id: movie.id,
+            })}
+          >
+            {(data) => (
+              <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
+                <div className="flex flex-row items-center">
+                  <div className="text-3xl p-4">📽</div>
+                  <div className="p-2">
+                    <p className="text-xl font-bold">Original Content</p>
+                    <p className="text-gray-500 font-medium">Oprah Milles</p>
+                    <p className="text-gray-500 text-sm">23 Nov 2022</p>
+                  </div>
+                </div>
+                <div className="border-t border-white/5 p-4">
+                  <Link
+                    href="/admin/category/[category]"
+                    as="/admin/category/original content"
+                  >
+                    <div className="inline-flex space-x-2 items-center text-center cursor-pointer">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                        />
+                      </svg>
+                      <span>See more</span>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            )}
+          </CategoryDataFetcher>
+          {/* <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
             <div className="flex flex-row items-center">
               <div className="text-3xl p-4">📽</div>
               <div className="p-2">
@@ -264,8 +355,55 @@ const DashboardContent = () => {
                 <span>See more</span>
               </a>
             </div>
-          </div>
-          <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
+          </div> */}
+
+          <CategoryDataFetcher
+            categoryUrl="https://api.themoviedb.org/3/movie/upcoming?api_key=7b269e05a4ae4f5629b1515cafb76014"
+            transformFunction={(movie) => ({
+              title: movie.title,
+              imageUrl: `https://image.tmdb.org/t/p/w92/${movie.poster_path}`,
+              id: movie.id,
+            })}
+          >
+            {(data) => (
+              <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
+                <div className="flex flex-row items-center">
+                  <div className="text-3xl p-4">⏳</div>
+                  <div className="p-2">
+                    <p className="text-xl font-bold">Upcoming Movies</p>
+                    <p className="text-gray-500 font-medium">Jonny Nite</p>
+                    <p className="text-gray-500 text-sm">23 Nov 2022</p>
+                  </div>
+                </div>
+                <div className="border-t border-white/5 p-4">
+                  <Link
+                    href="/admin/category/[category]"
+                    as="/admin/category/popular-on-netflix"
+                  >
+                    <div className="inline-flex space-x-2 items-center text-center cursor-pointer">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                        />
+                      </svg>
+                      <span>See more</span>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            )}
+          </CategoryDataFetcher>
+
+          {/* <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
             <div className="flex flex-row items-center">
               <div className="text-3xl p-4">⏳</div>
               <div className="p-2">
@@ -296,12 +434,59 @@ const DashboardContent = () => {
                 <span>See more</span>
               </a>
             </div>
-          </div>
-          <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
+          </div> */}
+
+          <CategoryDataFetcher
+            categoryUrl="https://api.themoviedb.org/3/movie/top_rated?api_key=7b269e05a4ae4f5629b1515cafb76014"
+            transformFunction={(movie) => ({
+              title: movie.title,
+              imageUrl: `https://image.tmdb.org/t/p/w92/${movie.poster_path}`,
+              id: movie.id,
+            })}
+          >
+            {(data) => (
+              <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
+                <div className="flex flex-row items-center">
+                  <div className="text-3xl p-4">🥇</div>
+                  <div className="p-2">
+                    <p className="text-xl font-bold">Todays Top10</p>
+                    <p className="text-gray-500 font-medium">Megane Baile</p>
+                    <p className="text-gray-500 text-sm">22 Nov 2022</p>
+                  </div>
+                </div>
+                <div className="border-t border-white/5 p-4">
+                  <Link
+                    href="/admin/category/[category]"
+                    as="/admin/category/popular-on-netflix"
+                  >
+                    <div className="inline-flex space-x-2 items-center text-center cursor-pointer">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                        />
+                      </svg>
+                      <span>See more</span>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            )}
+          </CategoryDataFetcher>
+
+          {/* <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
             <div className="flex flex-row items-center">
               <div className="text-3xl p-4">🥇</div>
               <div className="p-2">
-                <p className="text-xl font-bold">Today's Top10</p>
+                <p className="text-xl font-bold">Todays Top10</p>
                 <p className="text-gray-500 font-medium">Megane Baile</p>
                 <p className="text-gray-500 text-sm">22 Nov 2022</p>
               </div>
@@ -328,12 +513,12 @@ const DashboardContent = () => {
                 <span>See more</span>
               </a>
             </div>
-          </div>
-          <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
+          </div> */}
+          <div className="tvShow bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
             <div className="flex flex-row items-center">
               <div className="text-3xl p-4">🚀</div>
               <div className="p-2">
-                <p className="text-xl font-bold">Trending movies</p>
+                <p className="text-xl font-bold">Tv show</p>
                 <p className="text-gray-500 font-medium">Tony Ankel</p>
                 <p className="text-gray-500 text-sm">22 Nov 2022</p>
               </div>
@@ -361,7 +546,7 @@ const DashboardContent = () => {
               </a>
             </div>
           </div>
-          <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
+          <div className="new-category bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
             <div className="flex flex-row items-center">
               <div className="text-3xl p-4">➕</div>
               <div className="p-2">
@@ -428,7 +613,7 @@ const DashboardContent = () => {
                 <td className="py-3 px-2">Approved</td>
                 <td className="py-3 px-2">
                   <div className="inline-flex items-center space-x-3">
-                    <a href="" title="Edit" className="hover:text-white">
+                    <a href="" title="Edit" className="hover:text-green-500">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -444,30 +629,11 @@ const DashboardContent = () => {
                         />
                       </svg>
                     </a>
-                    <a
-                      href=""
-                      title="Edit password"
-                      className="hover:text-white"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        className="w-5 h-5"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-                        />
-                      </svg>
-                    </a>
+                   
                     <a
                       href=""
                       title="Suspend user"
-                      className="hover:text-white"
+                      className="hover:text-red-500"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -508,7 +674,7 @@ const DashboardContent = () => {
                 <td className="py-3 px-2">Approved</td>
                 <td className="py-3 px-2">
                   <div className="inline-flex items-center space-x-3">
-                    <a href="" title="Edit" className="hover:text-white">
+                    <a href="" title="Edit" className="hover:text-green-500">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -524,30 +690,11 @@ const DashboardContent = () => {
                         />
                       </svg>
                     </a>
-                    <a
-                      href=""
-                      title="Edit password"
-                      className="hover:text-white"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        className="w-5 h-5"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-                        />
-                      </svg>
-                    </a>
+                   
                     <a
                       href=""
                       title="Suspend user"
-                      className="hover:text-white"
+                      className="hover:text-red-500"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -588,7 +735,7 @@ const DashboardContent = () => {
                 <td className="py-3 px-2">Approved</td>
                 <td className="py-3 px-2">
                   <div className="inline-flex items-center space-x-3">
-                    <a href="" title="Edit" className="hover:text-white">
+                    <a href="" title="Edit" className="hover:text-green-500">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -604,30 +751,11 @@ const DashboardContent = () => {
                         />
                       </svg>
                     </a>
-                    <a
-                      href=""
-                      title="Edit password"
-                      className="hover:text-white"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        className="w-5 h-5"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-                        />
-                      </svg>
-                    </a>
+                   
                     <a
                       href=""
                       title="Suspend user"
-                      className="hover:text-white"
+                      className="hover:text-red-500"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -668,7 +796,7 @@ const DashboardContent = () => {
                 <td className="py-3 px-2">Approved</td>
                 <td className="py-3 px-2">
                   <div className="inline-flex items-center space-x-3">
-                    <a href="" title="Edit" className="hover:text-white">
+                    <a href="" title="Edit" className="hover:text-green-500">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -684,30 +812,11 @@ const DashboardContent = () => {
                         />
                       </svg>
                     </a>
-                    <a
-                      href=""
-                      title="Edit password"
-                      className="hover:text-white"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        className="w-5 h-5"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-                        />
-                      </svg>
-                    </a>
+                   
                     <a
                       href=""
                       title="Suspend user"
-                      className="hover:text-white"
+                      className="hover:text-red-500"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
