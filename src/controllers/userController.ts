@@ -119,11 +119,10 @@ const registerUser = async (req: Request, res: Response) => {
 const loginUser = async (req: Request, res: Response) => {
   try {
     const { error, value } = loginSchema.validate(req.body);
-    console.log(error, value);
 
     if (error) {
       return res.status(400).json({
-        error: "Validation error",
+        error: 'Validation error',
         message: error.details[0].message,
       });
     }
@@ -132,35 +131,43 @@ const loginUser = async (req: Request, res: Response) => {
 
     // Check if the user exists
     const user = await UserModel.findOne({ email });
+
     if (!user) {
       return res.status(401).json({
-        error: "Authentication failed",
-        message: "Invalid email or password",
+        error: 'Authentication failed',
+        message: 'Invalid email or password',
       });
     }
 
     // Compare the provided password with the hashed password
     const passwordMatch = await bcrypt.compare(password, user.password);
+
     if (!passwordMatch) {
       return res.status(401).json({
-        error: "Authentication failed",
-        message: "Invalid email or password",
+        error: 'Authentication failed',
+        message: 'Invalid email or password',
       });
     }
 
     // Generate a JWT token for authentication
-    const token = jwt.sign({ userId: user._id }, jwtSecret, {
-      expiresIn: "1h", // Token expiration time
+    const tokenPayload = {
+      userId: user._id,
+      isAdmin: user.isAdmin,
+    };
+
+    const token = jwt.sign(tokenPayload, jwtSecret, {
+      expiresIn: '1h', // Token expiration time
     });
 
     return res.status(200).json({
-      message: "Login successful!",
+      message: 'Login successful!',
       token,
+      isAdmin: user.isAdmin, // Include isAdmin in the response
     });
   } catch (error: unknown) {
-    console.error("Error logging in:", error);
+    console.error('Error logging in:', error);
     return res.status(500).json({
-      error: "Internal server error",
+      error: 'Internal server error',
       message: (error as Error).message,
     });
   }
