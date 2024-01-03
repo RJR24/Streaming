@@ -1,36 +1,32 @@
-import { Request, Response } from 'express';
-import MovieModel from '../models/movieModel';
+import { Request, Response } from "express";
+import MovieModel from "../models/movieModel";
+import CategoryModel from "../models/CategoryModel";
 
 const createMovie = async (req: Request, res: Response) => {
   try {
-    const {
-      title,
-      movieId,
-      overview,
-      releaseDate,
-      genre,
-      posterPath,
-      backdropPath,
-    } = req.body;
+    const { title, genre, category } = req.body;
+
+    // Check if the category with the given ID exists
+    const existingCategory = await CategoryModel.findOne({ title: category });
+    if (!existingCategory) {
+      return res.status(400).json({ error: "category not found!" });
+    }
 
     const newMovie = await MovieModel.create({
       title,
-      movieId,
-      overview,
-      releaseDate,
       genre,
-      posterPath,
-      backdropPath,
+      category: existingCategory._id, // Use the ID of the existing category
     });
 
     return res.status(201).json({
-      message: 'Movie created successfully!',
+      message: "Movie created successfully!",
       data: newMovie,
     });
   } catch (error: unknown) {
-    console.error('Error creating movie:', error);
+    console.error("Error creating movie:", error);
+
     return res.status(500).json({
-      error: 'Internal server error',
+      error: "Internal server error",
       message: (error as Error).message,
     });
   }
@@ -39,7 +35,8 @@ const createMovie = async (req: Request, res: Response) => {
 const updateMovie = async (req: Request, res: Response) => {
   try {
     const { movieId } = req.params;
-    const { title, overview, releaseDate, genre, posterPath, backdropPath } = req.body;
+    const { title, overview, releaseDate, genre, posterPath, backdropPath } =
+      req.body;
 
     const updatedMovie = await MovieModel.findByIdAndUpdate(
       movieId,
@@ -56,19 +53,19 @@ const updateMovie = async (req: Request, res: Response) => {
 
     if (!updatedMovie) {
       return res.status(404).json({
-        error: 'Not Found',
-        message: 'Movie not found',
+        error: "Not Found",
+        message: "Movie not found",
       });
     }
 
     return res.status(200).json({
-      message: 'Movie updated successfully!',
+      message: "Movie updated successfully!",
       data: updatedMovie,
     });
   } catch (error: unknown) {
-    console.error('Error updating movie:', error);
+    console.error("Error updating movie:", error);
     return res.status(500).json({
-      error: 'Internal server error',
+      error: "Internal server error",
       message: (error as Error).message,
     });
   }
@@ -79,13 +76,13 @@ const getMovies = async (req: Request, res: Response) => {
     const movies = await MovieModel.find();
 
     return res.status(200).json({
-      message: 'Movies fetched successfully!',
+      message: "Movies fetched successfully!",
       data: movies,
     });
   } catch (error: unknown) {
-    console.error('Error fetching movies:', error);
+    console.error("Error fetching movies:", error);
     return res.status(500).json({
-      error: 'Internal server error',
+      error: "Internal server error",
       message: (error as Error).message,
     });
   }
@@ -99,19 +96,19 @@ const deleteMovie = async (req: Request, res: Response) => {
 
     if (!deletedMovie) {
       return res.status(404).json({
-        error: 'Not Found',
-        message: 'Movie not found',
+        error: "Not Found",
+        message: "Movie not found",
       });
     }
 
     return res.status(200).json({
-      message: 'Movie deleted successfully!',
+      message: "Movie deleted successfully!",
       data: deletedMovie,
     });
   } catch (error: unknown) {
-    console.error('Error deleting movie:', error);
+    console.error("Error deleting movie:", error);
     return res.status(500).json({
-      error: 'Internal server error',
+      error: "Internal server error",
       message: (error as Error).message,
     });
   }
