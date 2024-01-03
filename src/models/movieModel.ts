@@ -1,4 +1,5 @@
-import { Schema, Document, model } from "mongoose";
+import { Schema, Document, model, Types } from "mongoose";
+import CategoryModel from "./CategoryModel"; // Import your Category model
 
 interface IMovie extends Document {
   title: string;
@@ -8,7 +9,7 @@ interface IMovie extends Document {
   genre: string[];
   posterPath: string;
   backdropPath: string;
-  // Add other movie fields as needed
+  category: string | null; // Ref to the Category model
 }
 
 const movieSchema = new Schema<IMovie>(
@@ -19,7 +20,7 @@ const movieSchema = new Schema<IMovie>(
     },
     movieId: {
       type: String,
-      required: true,
+      required: false,
     },
     overview: {
       type: String,
@@ -40,6 +41,11 @@ const movieSchema = new Schema<IMovie>(
     backdropPath: {
       type: String,
       required: false,
+    },
+    category: {
+      type: String,
+      ref: "Category", // Ref to the Category model
+      required: true,
     },
   },
   { timestamps: true }
