@@ -68,6 +68,7 @@ const Login = () => {
       }.`,
       icon: "success",
       showConfirmButton: true,
+      timer: 1500,
     });
   };
 
@@ -76,7 +77,8 @@ const Login = () => {
       title: "Oops.",
       text: "Invalid email or password. Please try again.",
       icon: "error",
-      showConfirmButton: false,
+      showConfirmButton: true,
+      timer: 1500,
     });
     console.error("Error submitting login form:", error);
   };
