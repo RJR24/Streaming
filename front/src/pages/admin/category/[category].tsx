@@ -6,6 +6,13 @@ import axios from "axios";
 
 import CategoryDataFetcher from "../../../components/dataFetching/CategoryDataFetcher";
 
+interface Movie {
+  title: string;
+  imageUrl: string;
+  genre: string;
+}
+
+
 const CategoryDetailsPage = () => {
   const router = useRouter();
   const { category } = router.query;
@@ -33,7 +40,7 @@ const CategoryDetailsPage = () => {
 
   const handleAddMovie = () => {
     if (!newMovie.title || !newMovie.genre) {
-      // Check if title or id is empty
+      // Check if title or genre is empty
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -80,16 +87,16 @@ const CategoryDetailsPage = () => {
         });
       });
 
-    // Check if title or id is repetitive
+    // Check if title is repetitive
     const isDuplicate = data.some(
-      (movie) => movie.title === newMovie.title || movie.id === newMovie.genre
+      (movie) => movie.title === newMovie.title
     );
 
     if (isDuplicate) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Title or ID is already in use. Please enter unique values.",
+        text: "Title is already in use. Please enter unique values.",
       });
       return;
     }
@@ -132,7 +139,7 @@ const CategoryDetailsPage = () => {
               <tr>
                 <th className="text-left py-3 px-2 rounded-l-lg">Image</th>
                 <th className="text-left py-3 px-2">Title</th>
-                <th className="text-left py-3 px-2">Genre</th>
+                <th className="text-left py-3 px-2">Id</th>
                 <th className="text-left py-3 px-2 rounded-r-lg">Actions</th>
               </tr>
             </thead>
