@@ -1,11 +1,33 @@
+import { useState } from "react";
 import Link from "next/link";
 import CategoryDataFetcher from "../../dataFetching/CategoryDataFetcher";
+import AddCategoryModal from "../../AddCategoryModal";
+import RemoveCategoryModal from "../../RemoveCategoryModal";
 
 const DashboardContent = () => {
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+
+  
+  const handleOpenAddModal = () => {
+    setIsAddModalOpen(true);
+  };
+  
+  const handleCloseAddModal = () => {
+    setIsAddModalOpen(false);
+  };
+  
+  const handleOpenRemoveModal = () => {
+    setIsRemoveModalOpen(true);
+  };
+  
+  const handleCloseRemoveModal = () => {
+    setIsRemoveModalOpen(false);
+  };
+  
   const apiKey = process.env.NEXT_PUBLIC_API_KEY;
   const tmdbUrl = process.env.NEXT_PUBLIC_API_URL;
-  const getCategoryUrl = (category) =>
-    `${tmdbUrl}/movie/${category}?api_key=${apiKey}`;
+
   return (
     <div id="content" className="bg-white/10 col-span-9 rounded-lg p-6">
       <div id="7DaysStatistics">
@@ -158,7 +180,7 @@ const DashboardContent = () => {
           id="categoriesStats"
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
         >
-          <CategoryDataFetcher
+          <CategoryDataFetcher 
             categoryUrl={`${tmdbUrl}/movie/popular?api_key=${apiKey}`}
             transformFunction={(movie) => ({
               title: movie.title,
@@ -297,7 +319,7 @@ const DashboardContent = () => {
           </CategoryDataFetcher>
 
           <CategoryDataFetcher
-          categoryUrl={`${tmdbUrl}/movie/upcoming?api_key=${apiKey}`}
+            categoryUrl={`${tmdbUrl}/movie/upcoming?api_key=${apiKey}`}
             transformFunction={(movie) => ({
               title: movie.title,
               imageUrl: `https://image.tmdb.org/t/p/w92/${movie.poster_path}`,
@@ -388,38 +410,52 @@ const DashboardContent = () => {
             )}
           </CategoryDataFetcher>
 
-          <div className="tvShow bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
-            <div className="flex flex-row items-center">
-              <div className="text-3xl p-4">🚀</div>
-              <div className="p-2">
-                <p className="text-xl font-bold">Tv show</p>
-                <p className="text-gray-500 font-medium">Tony Ankel</p>
-                <p className="text-gray-500 text-sm">22 Nov 2022</p>
+          <CategoryDataFetcher
+            categoryUrl={`${tmdbUrl}/movie/top_rated?api_key=${apiKey}`}
+            transformFunction={(movie) => ({
+              title: movie.title,
+              imageUrl: `https://image.tmdb.org/t/p/w92/${movie.poster_path}`,
+              id: movie.id,
+            })}
+          >
+            {(data) => (
+              <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
+                <div className="flex flex-row items-center">
+                  <div className="text-3xl p-4">🚀</div>
+                  <div className="p-2">
+                    <p className="text-xl font-bold">Trending</p>
+                    <p className="text-gray-500 font-medium">Tony Ankel</p>
+                    <p className="text-gray-500 text-sm">22 Nov 2022</p>
+                  </div>
+                </div>
+                <div className="border-t border-white/5 p-4">
+                  <Link
+                    href="/admin/category/[category]"
+                    as="/admin/category/Tv-shows"
+                  >
+                    <div className="inline-flex space-x-2 items-center text-center cursor-pointer">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                        />
+                      </svg>
+                      <span>See more</span>
+                    </div>
+                  </Link>
+                </div>
               </div>
-            </div>
-            <div className="border-t border-white/5 p-4">
-              <a
-                href="#"
-                className="inline-flex space-x-2 items-center text-center"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-                <span>See more</span>
-              </a>
-            </div>
-          </div>
+            )}
+          </CategoryDataFetcher>
+
           <div className="new-category bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
             <div className="flex flex-row items-center">
               <div className="text-3xl p-4">➕</div>
@@ -429,7 +465,10 @@ const DashboardContent = () => {
                 <p className="text-gray-500 text-sm">23 Nov 2022</p>
               </div>
             </div>
-            <div className="border-t border-white/5 p-4">
+            <div
+              className="border-t border-white/5 p-4"
+              onClick={handleOpenAddModal}
+            >
               <a
                 href="#"
                 className="inline-flex space-x-2 items-center text-center"
@@ -451,18 +490,62 @@ const DashboardContent = () => {
                 <span>Click here to add</span>
               </a>
             </div>
+             {/* Render the CategoryModal */}
+           {isAddModalOpen && (
+            <AddCategoryModal onClose={handleCloseAddModal} />
+          )}
           </div>
+          
+          <div className="new-category bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
+            <div className="flex flex-row items-center">
+              <div className="text-3xl p-4">➖</div>
+              <div className="p-2">
+                <p className="text-xl font-bold">Remove category</p>
+                <p className="text-gray-500 font-medium">Jonny Nite</p>
+                <p className="text-gray-500 text-sm">23 Nov 2022</p>
+              </div>
+            </div>
+            <div
+              className="border-t border-white/5 p-4"
+              onClick={handleOpenRemoveModal}
+            >
+              <a
+                href="#"
+                className="inline-flex space-x-2 items-center text-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                  />
+                </svg>
+                <span>Click here to add</span>
+              </a>
+            </div>
+             {/* Render the CategoryModal */}
+           {isRemoveModalOpen && (
+            <RemoveCategoryModal onClose={handleCloseRemoveModal} />
+          )}
+          </div>
+
         </div>
       </div>
-     
     </div>
   );
 };
 
 export default DashboardContent;
 
-
-{/* <div id="last-users">
+{
+  /* <div id="last-users">
 <h1 className="font-bold py-4 uppercase">Last 24h users</h1>
 <div className="overflow-x-scroll">
   <table className="w-full whitespace-nowrap">
@@ -721,8 +804,8 @@ export default DashboardContent;
     </tbody>
   </table>
 </div>
-</div> */}
-
+</div> */
+}
 
 // {[
 //   { category: "popular", emoji: "🤩", title: "Popular on Netflix", link: "/admin/category/popular-on-netflix" },
