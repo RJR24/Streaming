@@ -3,7 +3,6 @@ import CategoryModel, { ICategory } from "../models/CategoryModel";
 import mongoose from "mongoose";
 import Category from "../models/CategoryModel";
 
-// Define the type for the response structure
 interface ApiResponse<T> {
   message?: string;
   data?: T;
@@ -15,7 +14,7 @@ const createCategory = async (
   res: Response<ApiResponse<ICategory | undefined>>
 ): Promise<Response<ApiResponse<ICategory | undefined>>> => {
   try {
-    const { title, description } = req.body;
+    const { title, description, slug } = req.body;
 
     // Check if a category with the same title already exists
     const existingCategory = await CategoryModel.findOne({ title });
@@ -29,7 +28,7 @@ const createCategory = async (
     }
 
     // If the category doesn't exist, create a new one
-    const newCategory = await CategoryModel.create({ title, description });
+    const newCategory = await CategoryModel.create({ title, description, slug });
 
     const response: ApiResponse<ICategory | undefined> = {
       message: "Category created successfully!",
@@ -73,7 +72,7 @@ const getAllCategories = async (
   }
 };
 
-// ...
+
 
 const updateCategory = async (
   req: Request,
@@ -138,30 +137,27 @@ const updateCategory = async (
   }
 };
 
-// ...
+
 
 const removeCategory = async (
   req: Request,
   res: Response<ApiResponse<ICategory>>
 ): Promise<void> => {
   try {
-    const { id } = req.params;
+    const { title } = req.params;
 
-    // Validate that id is a valid ObjectId
-    if (!mongoose.Types.ObjectId.isValid(id)) {
+    // Validate that the title is not empty
+    if (!title) {
       const response: ApiResponse<ICategory> = {
-        error: "Invalid ObjectId",
-        message: "The provided ID is not a valid ObjectId.",
+        error: "Invalid Category Title",
+        message: "The provided category title is invalid.",
       };
 
       res.status(400).json(response);
       return;
     }
 
-    // Convert the string id to ObjectId
-    const categoryId = new mongoose.Types.ObjectId(id);
-
-    const category = await CategoryModel.findByIdAndDelete(categoryId);
+    const category = await CategoryModel.findOneAndDelete({ title });
 
     if (!category) {
       const notFoundResponse: ApiResponse<ICategory> = {
