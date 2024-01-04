@@ -51,7 +51,7 @@ const UsersManagement: React.FC = () => {
               <th className="text-left py-3 px-2 rounded-l-lg">Name</th>
               <th className="text-left py-3 px-2">Email</th>
               <th className="text-left py-3 px-2">Group</th>
-              <th className="text-left py-3 px-2">Status</th>
+              <th className="text-left py-3 px-2">Admin</th>
               <th className="text-left py-3 px-2 rounded-r-lg">Actions</th>
             </thead>
             <tbody>
