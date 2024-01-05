@@ -9,6 +9,7 @@ import UsersManagement from "./dashboardContents/UsersManagement";
 import axios from "axios";
 import { useRouter } from "next/router";
 import UserPersonalInfo from "./dashboardContents/profileContent/userPersonalInfo";
+import Swal from "sweetalert2";
 
 const UserDashboard = () => {
   const [activeContent, setActiveContent] = useState("");
@@ -18,21 +19,39 @@ const UserDashboard = () => {
     setActiveContent(content);
   };
 
-  const handleLogout = async () => {
-    try {
-      const authToken = localStorage.getItem("x-auth-token");
+const handleLogout = async () => {
+  try {
+    // Show a confirmation message
+    const confirmResult = await Swal.fire({
+      icon: 'question',
+      title: 'Confirm Logout',
+      text: 'Are you sure you want to log out?',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, log out',
+      cancelButtonText: 'Cancel',
+    });
+
+    // If the user confirms the logout, proceed with the logout request
+    if (confirmResult.isConfirmed) {
+      const authToken = localStorage.getItem('x-auth-token');
+
       // Make a request to logout endpoint
-      await axios.post("http://localhost:8000/auth/logout", null, {
+      await axios.post('http://localhost:8000/auth/logout', null, {
         headers: {
-          "x-auth-token": authToken,
+          'x-auth-token': authToken,
         },
       });
+
       // Redirect to login
-      router.push("/login");
-    } catch (error) {
-      console.error("Logout failed", error);
+      router.push('/login');
     }
-  };
+  } catch (error) {
+    console.error('Logout failed', error);
+  }
+};
+
 
   useEffect(() => {
     setActiveContent("dashboard");
