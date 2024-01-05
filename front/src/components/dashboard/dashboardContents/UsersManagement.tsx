@@ -49,8 +49,8 @@ const UsersManagement: React.FC = () => {
           <table className="w-full whitespace-nowrap">
             <thead className="bg-black/60">
               <th className="text-left py-3 px-2 rounded-l-lg">Name</th>
+              <th className="text-left py-3 px-2">Username</th>
               <th className="text-left py-3 px-2">Email</th>
-              <th className="text-left py-3 px-2">Group</th>
               <th className="text-left py-3 px-2">Admin</th>
               <th className="text-left py-3 px-2 rounded-r-lg">Actions</th>
             </thead>
@@ -71,11 +71,10 @@ const UsersManagement: React.FC = () => {
                   </td>
                   <td className="py-3 px-2">{user.name}</td>
                   <td className="py-3 px-2">{user.email}</td>
-                  <td className="py-3 px-2">{user.isAdmin ? "Yes" : "No"}</td>
-                  <td className="py-2 px-4">Approved</td>
+                  <td className="py-3 px-2">{user.isAdmin ? "✅Yes" : "⛔No"}</td>
                   <td className="py-3 px-2">
                     <div className="inline-flex items-center space-x-3">
-                      <a href="" title="Edit" className="hover:text-white">
+                      <a href="" title="Edit" className="hover:text-blue-500">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -93,28 +92,8 @@ const UsersManagement: React.FC = () => {
                       </a>
                       <a
                         href=""
-                        title="Edit password"
-                        className="hover:text-white"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke-width="1.5"
-                          stroke="currentColor"
-                          className="w-5 h-5"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-                          />
-                        </svg>
-                      </a>
-                      <a
-                        href=""
                         title="Suspend user"
-                        className="hover:text-white"
+                        className="hover:text-red-500"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
