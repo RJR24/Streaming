@@ -1,13 +1,13 @@
 "use clientSide";
 import React, { useEffect, useState } from "react";
-import Head from "next/head";
 
 import "./dashboard-styles.css";
-import DashboardContent from "./dashboardContents/MainDashboardContent";
 import ProfileContent from "./dashboardContents/profileContent/ProfileContent";
 import axios from "axios";
 import { useRouter } from "next/router";
 import UserPersonalInfo from "./dashboardContents/profileContent/userPersonalInfo";
+import UserMainDashboardContent from "./dashboardContents/UserMainDashboardContent";
+import Head from "next/head";
 
 const UserDashboard = () => {
   const [activeContent, setActiveContent] = useState("");
@@ -36,8 +36,6 @@ const UserDashboard = () => {
   useEffect(() => {
     setActiveContent("dashboard");
   }, []);
-
-
 
   return (
     <div>
@@ -188,7 +186,7 @@ const UserDashboard = () => {
                 v1.0.0 | &copy; 2023 Kaveh RezaeiJAmi
               </p>
             </div>
-            {activeContent === "dashboard" && <DashboardContent />}
+            {activeContent === "dashboard" && <UserMainDashboardContent />}
             {activeContent === "profile" && <ProfileContent />}
             {/* {activeContent === "profile" && <UserPersonalInfo />} */}
           </div>
