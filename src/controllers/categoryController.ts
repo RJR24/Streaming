@@ -144,20 +144,23 @@ const removeCategory = async (
   res: Response<ApiResponse<ICategory>>
 ): Promise<void> => {
   try {
-    const { title } = req.params;
+    const { id } = req.params;
 
-    // Validate that the title is not empty
-    if (!title) {
+    // Validate that id is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       const response: ApiResponse<ICategory> = {
-        error: "Invalid Category Title",
-        message: "The provided category title is invalid.",
+        error: "Invalid ObjectId",
+        message: "The provided ID is not a valid ObjectId.",
       };
 
       res.status(400).json(response);
       return;
     }
 
-    const category = await CategoryModel.findOneAndDelete({ title });
+    // Convert the string id to ObjectId
+    const categoryId = new mongoose.Types.ObjectId(id);
+
+    const category = await CategoryModel.findByIdAndDelete(categoryId);
 
     if (!category) {
       const notFoundResponse: ApiResponse<ICategory> = {
@@ -193,5 +196,6 @@ const removeCategory = async (
     }
   }
 };
+
 
 export { createCategory, removeCategory, getAllCategories, updateCategory };
