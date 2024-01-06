@@ -102,9 +102,8 @@ const UserDashboard = () => {
               <hr className="my-2 border-slate-700"></hr>
               <div id="menu" className="flex flex-col space-y-2 my-5">
                 <a
-                  href="#"
+                  href="/home"
                   className="hover:bg-white/10 transition duration-150 ease-linear rounded-lg py-3 px-2 group"
-                  onClick={() => handleMenuClick("dashboard")}
                 >
                   <div className="flex flex-col space-y-2 md:flex-row md:space-y-0 space-x-2 items-center">
                     <div>
@@ -125,7 +124,39 @@ const UserDashboard = () => {
                     </div>
                     <div>
                       <p className="font-bold text-base lg:text-lg text-slate-200 leading-4 group-hover:text-indigo-400">
-                        Dashboard
+                        Home
+                      </p>
+                      <p className="text-slate-400 text-sm hidden md:block">
+                        Home page
+                      </p>
+                    </div>
+                  </div>
+                </a>
+                <a
+                  href="#"
+                  className="hover:bg-white/10 transition duration-150 ease-linear rounded-lg py-3 px-2 group"
+                  onClick={() => handleMenuClick("dashboard")}
+                >
+                  <div className="flex flex-col space-y-2 md:flex-row md:space-y-0 space-x-2 items-center">
+                    <div>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6 group-hover:text-indigo-400"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M9 4h6l2 2h4a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2h4l2-2z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-bold text-base lg:text-lg text-slate-200 leading-4 group-hover:text-indigo-400">
+                        Categories
                       </p>
                       <p className="text-slate-400 text-sm hidden md:block">
                         Data overview
