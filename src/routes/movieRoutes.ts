@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.post("/auth/addMovie", isLoggedIn, isAdmin, createMovie);
 router.put("/update/:movieId", isLoggedIn, isAdmin, updateMovie);
-router.get("/list", isLoggedIn, getMovies);
+router.get("/MoviesList", isLoggedIn, isAdmin, getMovies);
 router.delete("/delete/:movieId", isLoggedIn, isAdmin, deleteMovie);
 
 export default router;
