@@ -1,6 +1,6 @@
 .hero-container {
   height: 50rem !important;
-  background: url("../../assets/image-logo/heroImage.png") no-repeat
+  background: url("../../assets/image-logo/money-heist02.jpg") no-repeat
     center/cover;
   color: white;
 }
@@ -11,6 +11,3 @@
 .hero-movie-details {
   width: 40rem;
 }
-/* .top-ten{
-  height: auto!important;
-} */
