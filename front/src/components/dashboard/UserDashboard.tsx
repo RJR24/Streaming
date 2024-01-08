@@ -8,9 +8,12 @@ import { useRouter } from "next/router";
 import UserPersonalInfo from "./dashboardContents/profileContent/userPersonalInfo";
 import UserMainDashboardContent from "./dashboardContents/UserMainDashboardContent";
 import Head from "next/head";
+import Swal from "sweetalert2";
 
 const UserDashboard = () => {
   const [activeContent, setActiveContent] = useState("");
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
   const router = useRouter();
 
   const handleMenuClick = (content: string) => {
@@ -19,23 +22,75 @@ const UserDashboard = () => {
 
   const handleLogout = async () => {
     try {
-      const authToken = localStorage.getItem("x-auth-token");
-      // Make a request to logout endpoint
-      await axios.post("http://localhost:8000/auth/logout", null, {
-        headers: {
-          "x-auth-token": authToken,
-        },
+      // Show a confirmation message
+      const confirmResult = await Swal.fire({
+        icon: "question",
+        title: "Confirm Logout",
+        text: "Are you sure you want to log out?",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Yes, log out",
+        cancelButtonText: "Cancel",
       });
-      // Redirect to login
-      router.push("/login");
+
+      // If the user confirms the logout, proceed with the logout request
+      if (confirmResult.isConfirmed) {
+        const authToken = localStorage.getItem("x-auth-token");
+
+        // Make a request to logout endpoint
+        await axios.post("http://localhost:8000/auth/logout", null, {
+          headers: {
+            "x-auth-token": authToken,
+          },
+        });
+
+        // Redirect to login
+        router.push("/login");
+      }
     } catch (error) {
       console.error("Logout failed", error);
     }
   };
 
   useEffect(() => {
+    const checkUserRole = async () => {
+      try {
+        const authToken = localStorage.getItem("x-auth-token");
+
+        if (!authToken) {
+          // Token is not provided, redirect to login
+          router.push("/login");
+          return;
+        }
+
+        // Make a request to get user information, including isAdmin
+        const response = await axios.get("http://localhost:8000/profile", {
+          headers: {
+            "x-auth-token": authToken,
+          },
+        });
+
+        const user = response.data.data;
+        console.log("🚀 ~ file: UserDashboard.tsx:73 ~ checkUserRole ~ user:", user);
+
+        // Set user data in state
+        setUserName(user.name);
+        setEmail(user.email);
+      } catch (error) {
+        console.error("Error checking user role:", error);
+
+        // Token is not valid, redirect to login
+        router.push("/login");
+      }
+    };
+
+    // Call the function to check user role
+    checkUserRole();
+
+    // Set activeContent after checking user role
     setActiveContent("dashboard");
-  }, []);
+  }, [router]);
 
   return (
     <div>
@@ -74,13 +129,45 @@ const UserDashboard = () => {
                 </div>
                 <div>
                   <p className="font-medium group-hover:text-indigo-400 leading-4">
-                    Kaveh Jami
+                    {userName}
                   </p>
                   <span className="text-xs text-slate-400"></span>
                 </div>
               </a>
               <hr className="my-2 border-slate-700"></hr>
               <div id="menu" className="flex flex-col space-y-2 my-5">
+                <a
+                  href="/home"
+                  className="hover:bg-white/10 transition duration-150 ease-linear rounded-lg py-3 px-2 group"
+                  onClick={() => handleMenuClick("dashboard")}
+                >
+                  <div className="flex flex-col space-y-2 md:flex-row md:space-y-0 space-x-2 items-center">
+                    <div>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6 group-hover:text-indigo-400"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-bold text-base lg:text-lg text-slate-200 leading-4 group-hover:text-indigo-400">
+                        Home
+                      </p>
+                      <p className="text-slate-400 text-sm hidden md:block">
+                        Home page
+                      </p>
+                    </div>
+                  </div>
+                </a>
                 <a
                   href="#"
                   className="hover:bg-white/10 transition duration-150 ease-linear rounded-lg py-3 px-2 group"
