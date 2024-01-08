@@ -22,7 +22,6 @@ const Carousel: React.FC<CarouselProps> = ({ title, items = [] }) => {
     infinite: true,
     slidesToShow: 5,
     slidesToScroll: 1,
-    // other settings as needed
   };
 
   return (
