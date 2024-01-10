@@ -14,6 +14,10 @@ import AdminMainDashboardContent from "./dashboardContents/AdminMainDashboardCon
 
 const UserDashboard = () => {
   const [activeContent, setActiveContent] = useState("");
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+
+
   const router = useRouter();
 
   const handleMenuClick = (content: string) => {
@@ -54,8 +58,46 @@ const UserDashboard = () => {
   };
 
   useEffect(() => {
+    const checkUserRole = async () => {
+      try {
+        const authToken = localStorage.getItem("x-auth-token");
+
+        if (!authToken) {
+          // Token is not provided, redirect to login
+          router.push("/login");
+          return;
+        }
+
+        // Make a request to get user information, including isAdmin
+        const response = await axios.get("http://localhost:8000/profile", {
+          headers: {
+            "x-auth-token": authToken,
+          },
+        });
+
+        const user = response.data.data;
+        console.log(
+          "🚀 ~ file: UserDashboard.tsx:73 ~ checkUserRole ~ user:",
+          user
+        );
+
+        // Set user data in state
+        setUserName(user.name);
+        setEmail(user.email);
+      } catch (error) {
+        console.error("Error checking user role:", error);
+
+        // Token is not valid, redirect to login
+        router.push("/login");
+      }
+    };
+
+    // Call the function to check user role
+    checkUserRole();
+
+    // Set activeContent after checking user role
     setActiveContent("dashboard");
-  }, []);
+  }, [router]);
 
   return (
     <div>
@@ -80,7 +122,7 @@ const UserDashboard = () => {
               <h1 className="font-bold text-lg lg:text-3xl bg-gradient-to-br from-white via-white/50 to-transparent bg-clip-text text-transparent">
                 Dashboard<span className="text-indigo-400">.</span>
               </h1>
-              <p className="text-slate-400 text-sm mb-2">Welcome back,</p>
+              <p className="text-slate-400 text-sm mb-2">Welcome</p>
               <a
                 href="#"
                 className="flex flex-col space-y-2 md:space-y-0 md:flex-row mb-5 items-center md:space-x-2 hover:bg-white/10 group transition duration-150 ease-linear rounded-lg group w-full py-3 px-2"
@@ -94,7 +136,7 @@ const UserDashboard = () => {
                 </div>
                 <div>
                   <p className="font-medium group-hover:text-indigo-400 leading-4">
-                    Kaveh Jami
+                    {userName}
                   </p>
                   <span className="text-xs text-slate-400"></span>
                 </div>
