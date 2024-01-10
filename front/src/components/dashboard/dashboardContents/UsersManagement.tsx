@@ -1,44 +1,142 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 interface User {
   _id: string;
   name: string;
   email: string;
   isAdmin: boolean;
+  suspended?: boolean;
 }
 
 const UsersManagement: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+
+  const fetchUsers = async () => {
+    try {
+      const token = localStorage.getItem("x-auth-token");
+      if (!token) {
+        console.error("Access denied. No token provided.");
+        return;
+      }
+
+      const response = await axios.get("http://localhost:8000/api/usersList", {
+        headers: {
+          "x-auth-token": token,
+        },
+      });
+
+      setUsers(response.data.users);
+      console.log("Users from the database:", response.data.users);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const token = localStorage.getItem("x-auth-token");
-        if (!token) {
-          console.error("Access denied. No token provided.");
-          return;
-        }
-
-        const response = await axios.get(
-          "http://localhost:8000/api/usersList",
-          {
-            headers: {
-              "x-auth-token": token,
-            },
-          }
-        );
-
-        setUsers(response.data.users);
-        console.log("Users from the database:", response.data.users);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-
     fetchUsers();
-  }, []); // Empty dependency array to ensure the effect runs only once
-  console.log("users:", users);
+  }, []);
+
+  const suspendUser = (userId: string) => {
+    setSelectedUserId(userId);
+    Swal.fire({
+      title: "Are you sure?",
+      text: `Do you want to ${
+        users.find((user) => user._id === userId)?.suspended
+          ? "Reactivate"
+          : "Suspend"
+      } the user?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (users.find((user) => user._id === userId)?.suspended) {
+          confirmReactivate();
+        } else {
+          confirmSuspension();
+        }
+      }
+    });
+  };
+
+  const confirmSuspension = async () => {
+    if (!selectedUserId) {
+      console.error("Access denied. No selectedUserId provided.");
+      return;
+    }
+    try {
+      const token = localStorage.getItem("x-auth-token");
+      if (!token) {
+        console.error("Access denied. No token provided.");
+        return;
+      }
+
+      if (!selectedUserId) {
+        console.error("Access denied. No selectedUserId provided.");
+        return;
+      }
+
+      console.log("Token:", token);
+      console.log("Selected User ID:", selectedUserId);
+
+      await axios.post(
+        `http://localhost:8000/api/suspendUser/${selectedUserId}`,
+        {},
+        {
+          headers: {
+            "x-auth-token": token,
+          },
+        }
+      );
+
+      Swal.fire("User Suspended!", "", "success");
+
+      // Refresh the users list after suspending the user
+      fetchUsers();
+    } catch (error) {
+      console.error("Error suspending user:", error);
+      Swal.fire("Error", "Failed to suspend user", "error");
+    } finally {
+      setSelectedUserId(null);
+    }
+  };
+
+  const confirmReactivate = async () => {
+    try {
+      const token = localStorage.getItem("x-auth-token");
+      if (!token) {
+        console.error("Access denied. No token provided.");
+        return;
+      }
+
+      await axios.post(
+        `http://localhost:8000/api/reactivateUser/${selectedUserId}`,
+        {},
+        {
+          headers: {
+            "x-auth-token": token,
+          },
+        }
+      );
+
+      // Move this line inside the try block
+      setSelectedUserId(null);
+
+      Swal.fire("User Reactivated!", "", "success");
+
+      // Refresh the users list after Reactivating the user
+      fetchUsers();
+    } catch (error) {
+      console.error("Error Reactivating user:", error);
+      Swal.fire("Error", "Failed to reactivate user", "error");
+    }
+  };
 
   return (
     <div className="bg-white/10 col-span-9 rounded-lg p-6">
@@ -60,18 +158,16 @@ const UsersManagement: React.FC = () => {
                   <td className="py-3 px-2 font-bold">
                     <div className="inline-flex space-x-3 items-center">
                       <span>
-                        <img
-                          className="rounded-full w-8 h-8"
-                          src="https://images.generated.photos/tGiLEDiAbS6NdHAXAjCfpKoW05x2nq70NGmxjxzT5aU/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/OTM4ODM1LmpwZw.jpg"
-                          alt=""
-                        ></img>
+                        
                       </span>
-                      <span>Thai Mei</span>
+                      <span>{user.name}</span>
                     </div>
                   </td>
                   <td className="py-3 px-2">{user.name}</td>
                   <td className="py-3 px-2">{user.email}</td>
-                  <td className="py-3 px-2">{user.isAdmin ? "✅Yes" : "⛔No"}</td>
+                  <td className="py-3 px-2">
+                    {user.isAdmin ? "✅Yes" : "⛔No"}
+                  </td>
                   <td className="py-3 px-2">
                     <div className="inline-flex items-center space-x-3">
                       <a href="" title="Edit" className="hover:text-blue-500">
@@ -79,37 +175,39 @@ const UsersManagement: React.FC = () => {
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
-                          stroke-width="1.5"
+                          strokeWidth="1.5"
                           stroke="currentColor"
                           className="w-5 h-5"
                         >
                           <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                             d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
                           />
                         </svg>
                       </a>
-                      <a
-                        href=""
-                        title="Suspend user"
+                      <button
+                        title="Suspend-user"
                         className="hover:text-red-500"
+                        onClick={() => suspendUser(user._id)}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
-                          stroke-width="1.5"
-                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          stroke={
+                            selectedUserId === user._id ? "red" : "currentColor"
+                          }
                           className="w-5 h-5"
                         >
                           <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                             d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
                           />
                         </svg>
-                      </a>
+                      </button>
                     </div>
                   </td>
                 </tr>
