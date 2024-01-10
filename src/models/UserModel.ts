@@ -14,6 +14,7 @@ export interface IUser extends Document {
   phoneNumber?: string;
   dateOfBirth?: Date;
   subscriptionStatus: "free" | "basic" | "premium";
+  suspended?: boolean;
 }
 
 const userSchema = new Schema<IUser>(
@@ -69,6 +70,7 @@ const userSchema = new Schema<IUser>(
       enum: ["free", "basic", "premium"],
       default: "free",
     },
+    suspended: { type: Boolean, default: false },
   },
   {
     timestamps: true,
