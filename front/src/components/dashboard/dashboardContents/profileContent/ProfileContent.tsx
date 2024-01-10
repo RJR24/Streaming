@@ -2,27 +2,32 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import ProfilePictureUpload from "./ProfilePictureUpload";
 import UserPersonalInfo from "./userPersonalInfo";
+import axios from "axios";
 
-const ProfileContent = () => {
+const ProfileContent: React.FC = () => {
   const router = useRouter();
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [userId, setUserId] = useState<string>("");
-  const [editMode, setEditMode] = useState(false); // New state for edit mode
+  const [userName, setUserName] = useState<string>("");
+  const [userEmail, setUserEmail] = useState<string>("");
+  const [editMode, setEditMode] = useState(false);
 
   const updateUserId = (id: string) => {
     setUserId(id);
   };
 
-  const updateAvatarUrl = (url: string) => {
-    setAvatarUrl(url);
+  const updateAvatarUrl = (newAvatarUrl: string) => {
+    setAvatarUrl(newAvatarUrl);
 
     // Check if userId is available before setting local storage
     if (userId) {
-      localStorage.setItem(`avatarUrl_${userId}`, url);
+      localStorage.setItem(`avatarUrl_${userId}`, newAvatarUrl);
     }
   };
+  
 
+ 
   useEffect(() => {
     const authToken = localStorage.getItem("x-auth-token");
 
@@ -34,28 +39,24 @@ const ProfileContent = () => {
 
     const fetchUserData = async () => {
       try {
-        const response = await fetch("http://localhost:8000/profile", {
+        const response = await axios.get("http://localhost:8000/profile", {
           headers: {
             "x-auth-token": authToken,
           },
         });
 
-        if (response.ok) {
-          const userData = await response.json();
-          const storedAvatarUrl = localStorage.getItem(
-            `avatarUrl_${userData.data?._id}`
-          );
-          setAvatarUrl(storedAvatarUrl || userData?.data?.avatar || "");
+        const userData = response.data;
+        const storedAvatarUrl = localStorage.getItem(
+          `avatarUrl_${userData.data?._id}`
+        );
+        setAvatarUrl(storedAvatarUrl || userData?.data?.avatar || "");
 
-          // Use _id directly as the user ID
-          const userId = userData.data?._id;
+        const userId = userData.data?._id;
+        setUserName(userData.data?.name);
+        setUserEmail(userData.data?.email);
 
-          if (userId) {
-            // Pass userId as a prop to ProfilePictureUpload
-            setUserId(userId);
-          }
-        } else {
-          console.error("Error fetching user data:", response.statusText);
+        if (userId) {
+          setUserId(userId);
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -98,20 +99,20 @@ const ProfileContent = () => {
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
-                      stroke-width="1.5"
+                      strokeWidth="1.5"
                       stroke="currentColor"
                       className="w-10 h-10 text-white"
                     >
                       <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                         d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"
                       />
                     </svg>
                   </div>
                   <div>
                     <p className="text-indigo-400 font-bold text-xl inline-flex items-center space-x-2">
-                      <span>Kaveh Jami</span>
+                      <span>{userName}</span>
                     </p>
                   </div>
                 </div>
@@ -121,20 +122,20 @@ const ProfileContent = () => {
                   <div id="stats-1"></div>
                   <div>
                     <p className="text-indigo-400 font-bold text-xl inline-flex items-center space-x-2">
-                      <span>KavehJami@gmail.com</span>
+                      <span>{userEmail}</span>
                     </p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div id="last-incomes">
+          <div id="profile">
             <h1 className="font-bold py-4 uppercase"></h1>
             <div
               id="stats"
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
             >
-              <div className="bg-black/60 hover:bg-white/10  to-white/5 rounded-lg">
+              <div className="profile-picture bg-black/60 hover:bg-white/10  to-white/5 rounded-lg">
                 {userId && (
                   <ProfilePictureUpload
                     setAvatarUrl={updateAvatarUrl}
@@ -143,7 +144,8 @@ const ProfileContent = () => {
                   />
                 )}
               </div>
-              <div className="bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
+              
+              <div className="email-password bg-black/60 hover:bg-white/10 to-white/5 rounded-lg">
                 <div className="flex flex-row items-center">
                   <div className=" p-4">
                     <svg
@@ -185,7 +187,7 @@ const ProfileContent = () => {
                 </div>
               </div>
 
-              <div className="bg-black/60 hover:bg-white/10  to-white/5 rounded-lg">
+              <div className="personal-info bg-black/60 hover:bg-white/10  to-white/5 rounded-lg">
                 <div className="flex flex-row items-center">
                   <div className=" p-4">
                     <svg
@@ -215,13 +217,13 @@ const ProfileContent = () => {
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
-                      stroke-width="1.5"
+                      strokeWidth="1.5"
                       stroke="currentColor"
                       className="w-6 h-6"
                     >
                       <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                         d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
                       />
                     </svg>
@@ -231,7 +233,7 @@ const ProfileContent = () => {
               </div>
             </div>
           </div>
-          <div id="last-users">
+          <div id="last-24-login">
             <h1 className="font-bold py-4 uppercase">Last 24h Logins</h1>
             <div className="overflow-x-scroll">
               <table className="w-full whitespace-nowrap">
@@ -255,15 +257,15 @@ const ProfileContent = () => {
                           alt=""
                         ></img>
                       </span>
-                      <span>Kaveh Jami</span>
+                      <span>{userName}</span>
                     </div>
                   </td>
-                  <td className="py-3 px-2">Kaveh@gmail.com</td>
+                  <td className="py-3 px-2">{userEmail}</td>
                   <td className="py-3 px-2">User</td>
                   <td className="py-3 px-2">Approved</td>
                 </tr>
                 <tr
-                  key={0}
+                  key={1}
                   className="border-b hover:bg-white/10 border-gray-700"
                 >
                   <td className="py-3 px-2 font-bold">
@@ -275,10 +277,10 @@ const ProfileContent = () => {
                           alt=""
                         ></img>
                       </span>
-                      <span>Kaveh Jami</span>
+                      <span>{userName}</span>
                     </div>
                   </td>
-                  <td className="py-3 px-2">Kaveh@gmail.com</td>
+                  <td className="py-3 px-2">{userEmail}</td>
                   <td className="py-3 px-2">User</td>
                   <td className="py-3 px-2">Approved</td>
                 </tr>
