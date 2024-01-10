@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, ChangeEvent } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Swal from "sweetalert2";
@@ -10,15 +10,32 @@ interface Movie {
   title: string;
   imageUrl: string;
   genre: string;
+  id: string;
 }
-
 
 const CategoryDetailsPage = () => {
   const router = useRouter();
   const { category } = router.query;
   const [selectedCategory, setSelectedCategory] = useState("popular");
   const [newMovie, setNewMovie] = useState({ title: "", genre: "" });
+  const [selectedMovieId, setSelectedMovieId] = useState("");
   const [data, setData] = useState<Movie[]>([]);
+
+  const fetchMoviesList = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/auth/MoviesList?category=${selectedCategory}`
+      );
+      setData(response.data);
+    } catch (error) {
+      console.error("Error fetching movies list:", error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch movies list for the selected category
+    fetchMoviesList();
+  }, [selectedCategory]);
 
   if (!category) {
     // Handle loading or error state
@@ -62,7 +79,10 @@ const CategoryDetailsPage = () => {
       genre: newMovie.genre,
       category: selectedCategory,
     };
-    console.log("🚀 ~ file: [category].tsx:58 ~ handleAddMovie ~ payload:", payload)
+    console.log(
+      "🚀 ~ file: [category].tsx:58 ~ handleAddMovie ~ payload:",
+      payload
+    );
 
     axios
       .post("http://localhost:8000/auth/addMovie", payload, { headers })
@@ -88,9 +108,7 @@ const CategoryDetailsPage = () => {
       });
 
     // Check if title is repetitive
-    const isDuplicate = data.some(
-      (movie) => movie.title === newMovie.title
-    );
+    const isDuplicate = data.some((movie) => movie.title === newMovie.title);
 
     if (isDuplicate) {
       Swal.fire({
@@ -104,6 +122,62 @@ const CategoryDetailsPage = () => {
 
     // Reset the input fields after successfully adding a movie
     setNewMovie({ title: "", genre: "" });
+  };
+
+  const handleRemoveMovie = async (movieId: string) => {
+    if (!movieId) {
+      // If no movie ID is provided, show an error message
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Please select a movie to remove.",
+      });
+      return;
+    }
+
+    // Show a confirmation message before proceeding with removal
+    const confirmationResult = await Swal.fire({
+      icon: "warning",
+      title: "Are you sure?",
+      text: "You are about to remove this movie. This action cannot be undone.",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, remove it!",
+    });
+
+    if (confirmationResult.isConfirmed) {
+      try {
+        const authToken = localStorage.getItem("x-auth-token");
+        // Make a request to delete the selected movie
+        await axios.delete(`http://localhost:8000/auth/delete/${movieId}`, {
+          headers: {
+            "x-auth-token": authToken,
+          },
+        });
+
+        // Show success message
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Movie removed successfully!",
+        });
+
+        // Refresh movies list after removal
+        fetchMoviesList();
+
+        // Reset selected movie ID
+        setSelectedMovieId("");
+      } catch (error) {
+        console.error("Error removing movie:", error);
+        // Show error message
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Error removing movie. Please try again.",
+        });
+      }
+    }
   };
 
   return (
@@ -161,8 +235,8 @@ const CategoryDetailsPage = () => {
                           className="w-12 h-12"
                         >
                           <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                             d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                           />
                         </svg>
@@ -227,29 +301,34 @@ const CategoryDetailsPage = () => {
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
-                          stroke-width="1.5"
+                          strokeWidth="1.5"
+                          stroke="currentColor"
+                          className="w-5 h-5"
+                        >
+                          <path
+                            strokLinecap="round"
+                            strokLinejoin="round"
+                            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+                          />
+                        </svg>
+                      </a>
+                      {/* Remove icon */}
+                      <a
+                        title="Remove"
+                        onClick={() => handleRemoveMovie(movie.id)}
+                        className="hover:text-red-500"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
                           stroke="currentColor"
                           className="w-5 h-5"
                         >
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
-                          />
-                        </svg>
-                      </a>
-                      <a href="" title="Remove" className="hover:text-red-500">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke-width="1.5"
-                          stroke="currentColor"
-                          className="w-5 h-5"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
                             d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
                           />
                         </svg>
