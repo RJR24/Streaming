@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import Header from "../../components/header/Header";
+import Header from "../../components/navbar/Navbar";
 import HeroSection from "../../components/hero/HeroSection";
 import Carousel from "../../components/carousels/Carousel";
 import UserMyList from "../../components/userMyList/UserMyList";
