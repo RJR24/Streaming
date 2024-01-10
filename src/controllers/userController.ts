@@ -1,15 +1,17 @@
 /// <reference path="../custom.d.ts" />
 
-
-import { Request, Response, RequestParamHandler } from "express";
+import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Joi from "joi";
 
-import UserModel, { IUser } from "../models/UserModel";
-import TokenBlackList from "../models/tokenBlackList";
+import path from 'path';
+import fs from 'fs';
 
-// import  { IUser } from '../models/UserModel'; // Update the path accordingly
+import UserModel from "../models/UserModel";
+import TokenBlackList from "../models/tokenBlackList";
+import upload from "../middlewares/multerMiddleware"
+
 const saltRounds = 10;
 const jwtSecret = process.env.JWT_SECRET!;
 
@@ -52,22 +54,7 @@ const uploadProfilePictureSchema = Joi.object({
   }).required(),
 });
 
-// Extend the existing Request type to include the 'file' property
-interface RequestWithFile extends Request {
-  file: {
-    fieldname: string;
-    originalname: string;
-    encoding: string;
-    mimetype: string;
-    size: number;
-    destination: string;
-    filename: string;
-    path: string;
-  };
-  params: {
-    userId: string;
-  };
-}
+
 
 ///////////////////////////////
 
@@ -122,7 +109,7 @@ const loginUser = async (req: Request, res: Response) => {
 
     if (error) {
       return res.status(400).json({
-        error: 'Validation error',
+        error: "Validation error",
         message: error.details[0].message,
       });
     }
@@ -134,8 +121,8 @@ const loginUser = async (req: Request, res: Response) => {
 
     if (!user) {
       return res.status(401).json({
-        error: 'Authentication failed',
-        message: 'Invalid email or password',
+        error: "Authentication failed",
+        message: "Invalid email or password",
       });
     }
 
@@ -144,8 +131,8 @@ const loginUser = async (req: Request, res: Response) => {
 
     if (!passwordMatch) {
       return res.status(401).json({
-        error: 'Authentication failed',
-        message: 'Invalid email or password',
+        error: "Authentication failed",
+        message: "Invalid email or password",
       });
     }
 
@@ -156,18 +143,18 @@ const loginUser = async (req: Request, res: Response) => {
     };
 
     const token = jwt.sign(tokenPayload, jwtSecret, {
-      expiresIn: '1h', // Token expiration time
+      expiresIn: "1h", // Token expiration time
     });
 
     return res.status(200).json({
-      message: 'Login successful!',
+      message: "Login successful!",
       token,
       isAdmin: user.isAdmin, // Include isAdmin in the response
     });
   } catch (error: unknown) {
-    console.error('Error logging in:', error);
+    console.error("Error logging in:", error);
     return res.status(500).json({
-      error: 'Internal server error',
+      error: "Internal server error",
       message: (error as Error).message,
     });
   }
@@ -293,14 +280,30 @@ const updateUserProfile = async (req: Request, res: Response) => {
 };
 
 const uploadProfilePictureHandler = async (
-  req: RequestWithFile,
+  req: Request,
   res: Response
 ): Promise<Response<any, Record<string, any>>> => {
   try {
-    const userId = req.params.userId;
-    const { file } = req.body;
+    console.log("Request received:", req.params);
 
-    console.log(file);
+    // Wrap the multer middleware in a Promise to make it awaitable
+    const multerMiddleware = () =>
+      new Promise<void>((resolve, reject) => {
+        upload(req, res, (err) => {
+          if (err) {
+            console.error("Error uploading file:", err);
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      });
+
+    // Wait for the multer middleware to complete
+    await multerMiddleware();
+
+    const userId = req.params.userId;
+    const file = req.file;
 
     if (!file) {
       return res.status(400).json({ error: "No file uploaded" });
@@ -308,7 +311,7 @@ const uploadProfilePictureHandler = async (
 
     const updatedUser = await UserModel.findByIdAndUpdate(
       userId,
-      { avatar: file.path }, // store file path in 'file.path'
+      { avatar: file.path },
       { new: true }
     );
 
@@ -316,18 +319,23 @@ const uploadProfilePictureHandler = async (
       return res.status(404).json({ error: "User not found" });
     }
 
+    // Send the response here, after handling the file upload
     return res.status(200).json({
       message: "Profile picture uploaded successfully",
       user: updatedUser,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error uploading profile picture:", error);
     return res.status(500).json({
       error: "Internal server error",
-      message: error.message,
+      message: (error as Error).message,
     });
   }
 };
+
+
+
+
 
 const addToMyList = async (req: Request, res: Response) => {
   const { movieId } = req.params;
@@ -462,6 +470,56 @@ const getUsersList = async (req: Request, res: Response) => {
   }
 };
 
+const suspendUser = async (req: Request, res: Response): Promise<void> => {
+  const userId = req.params.userId;
+
+  try {
+    // Find the user by ID
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      res.status(404).json({ error: "User not found." });
+      return;
+    }
+
+    // Update the 'suspended' field to true
+    user.suspended = true;
+
+    // Save the updated user
+    await user.save();
+
+    res.status(200).json({ message: "User suspended successfully." }); // Return success response
+  } catch (error) {
+    console.error("Error suspending user:", error);
+    res.status(500).json({ error: "Internal server error." }); // Return error response
+  }
+};
+
+const reactivateUser = async (req: Request, res: Response): Promise<void> => {
+  const userId = req.params.userId;
+
+  try {
+    // Find the user by ID
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      res.status(404).json({ error: "User not found." });
+      return;
+    }
+
+    // Update the 'suspended' field to false for reactivation
+    user.suspended = false;
+
+    // Save the updated user
+    await user.save();
+
+    res.status(200).json({ message: "User reactivated successfully." }); // Return success response
+  } catch (error) {
+    console.error("Error reactivating user:", error);
+    res.status(500).json({ error: "Internal server error." }); // Return error response
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -474,4 +532,6 @@ export {
   userMoviesList,
   getUsersList,
   uploadProfilePictureHandler,
+  suspendUser,
+  reactivateUser,
 };
