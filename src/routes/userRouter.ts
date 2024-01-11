@@ -19,7 +19,7 @@ import { isAdmin, isLoggedIn } from "../middlewares/auth";
 const userRouter = Router();
 
 userRouter.get("/profile", isLoggedIn, getUserProfile);
-userRouter.put("/update", isLoggedIn, updateUserProfile);
+userRouter.put("/api/users/:userId/update-user-info", isLoggedIn, updateUserProfile);
 userRouter.post("/auth/signup", registerUser);
 userRouter.post("/auth/login", loginUser);
 userRouter.post("/auth/logout", logoutUser);
