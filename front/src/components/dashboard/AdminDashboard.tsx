@@ -12,7 +12,7 @@ import UserPersonalInfo from "./dashboardContents/profileContent/userPersonalInf
 import Swal from "sweetalert2";
 import AdminMainDashboardContent from "./dashboardContents/AdminMainDashboardContent";
 
-const UserDashboard = () => {
+const AdminDashboard = () => {
   const [activeContent, setActiveContent] = useState("");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
@@ -322,4 +322,4 @@ const UserDashboard = () => {
   );
 };
 
-export default UserDashboard;
+export default AdminDashboard;
