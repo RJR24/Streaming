@@ -41,10 +41,10 @@ const loginSchema = Joi.object({
 
 // Validation schema for updating user profile
 const updateUserProfileSchema = Joi.object({
-  name: Joi.string().required(),
-  email: Joi.string().email().required(),
+  name: Joi.string(),
   phoneNumber: Joi.string().allow(null, "").optional(), // Optional, can be null or empty
   dateOfBirth: Joi.date().iso().optional(), // Optional date in ISO format
+  address: Joi.string().allow(null, "").optional(),
 });
 
 // Define Joi schema for updateProfilePicture endpoint
@@ -211,14 +211,14 @@ const getUserProfile = async (req: Request, res: Response) => {
 const updateUserProfile = async (req: Request, res: Response) => {
   try {
     // Extract data from request body
-    const { name, email, phoneNumber, dateOfBirth } = req.body;
+    const { name, phoneNumber, dateOfBirth, address } = req.body;
 
     // Validate the data using Joi schema
     const { error, value } = updateUserProfileSchema.validate({
       name,
-      email,
       phoneNumber,
       dateOfBirth,
+      address
     });
 
     if (error) {
@@ -231,9 +231,9 @@ const updateUserProfile = async (req: Request, res: Response) => {
     // Extract validated data
     const {
       name: validatedName,
-      email: validatedEmail,
       phoneNumber: validatedPhoneNumber,
       dateOfBirth: validatedDateOfBirth,
+      address: validatedAddress
     } = value;
 
     // Get the user ID from the authenticated user
@@ -252,9 +252,9 @@ const updateUserProfile = async (req: Request, res: Response) => {
       userId,
       {
         name: validatedName,
-        email: validatedEmail,
         phoneNumber: validatedPhoneNumber,
         dateOfBirth: validatedDateOfBirth,
+        address: validatedAddress,
       },
       { new: true }
     );
