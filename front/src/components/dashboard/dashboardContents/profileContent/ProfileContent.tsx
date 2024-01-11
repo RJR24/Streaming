@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import ProfilePictureUpload from "./ProfilePictureUpload";
 import UserPersonalInfo from "./userPersonalInfo";
+import UserInfoModal from "../../../UserInfoModal"; 
 import axios from "axios";
 
 const ProfileContent: React.FC = () => {
@@ -12,6 +13,7 @@ const ProfileContent: React.FC = () => {
   const [userName, setUserName] = useState<string>("");
   const [userEmail, setUserEmail] = useState<string>("");
   const [editMode, setEditMode] = useState(false);
+  const [showUserInfoModal, setShowUserInfoModal] = useState(false);
 
   const updateUserId = (id: string) => {
     setUserId(id);
@@ -26,6 +28,15 @@ const ProfileContent: React.FC = () => {
     }
   };
   
+  const handleEditClick = () => {
+    // Toggle edit mode
+    setEditMode(!editMode);
+  };
+
+  const handleEditPersonalInfoClick = () => {
+    // Step 2: Toggle visibility of UserInfoModal
+    setShowUserInfoModal(!showUserInfoModal);
+  };
 
  
   useEffect(() => {
@@ -76,10 +87,8 @@ const ProfileContent: React.FC = () => {
     router.push("/changeEmail");
   };
 
-  const handleEditClick = () => {
-    // Toggle edit mode
-    setEditMode(!editMode);
-  };
+
+
   return (
     <div id="content" className="bg-white/10 col-span-9 rounded-lg p-6">
       {editMode ? (
@@ -187,7 +196,7 @@ const ProfileContent: React.FC = () => {
                 </div>
               </div>
 
-              <div className="personal-info bg-black/60 hover:bg-white/10  to-white/5 rounded-lg">
+              <div className="personal-info  bg-black/60 hover:bg-white/10  to-white/5 rounded-lg">
                 <div className="flex flex-row items-center">
                   <div className=" p-4">
                     <svg
@@ -209,9 +218,9 @@ const ProfileContent: React.FC = () => {
                   </div>
                 </div>
                 <div className="border-t border-white/5 p-4">
-                  <a
-                    href="#"
+                  <button
                     className="inline-flex space-x-2 items-center text-center"
+                    onClick={handleEditPersonalInfoClick}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -228,10 +237,18 @@ const ProfileContent: React.FC = () => {
                       />
                     </svg>
                     <span className="hover:text-indigo-400">click to edit</span>
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>
+               {/*Render UserInfoModal when showUserInfoModal is true */}
+      {showUserInfoModal && (
+        <UserInfoModal
+          onClose={() => setShowUserInfoModal(false)}
+          user={{ }}
+          userId={userId}
+        />
+      )}
           </div>
           <div id="last-24-login">
             <h1 className="font-bold py-4 uppercase">Last 24h Logins</h1>

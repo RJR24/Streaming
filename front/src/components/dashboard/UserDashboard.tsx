@@ -277,9 +277,7 @@ const UserDashboard = () => {
               </p>
             </div>
             {activeContent === "dashboard" && <UserMainDashboardContent />}
-            {activeContent === "profile" && (
-              <ProfileContent />
-            )}
+            {activeContent === "profile" && <ProfileContent />}
             {/* {activeContent === "profile" && <UserPersonalInfo />} */}
           </div>
         </div>
