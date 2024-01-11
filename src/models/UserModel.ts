@@ -11,6 +11,7 @@ export interface IUser extends Document {
     title: string;
     imageUrl: string;
   }[];
+  address?: string;
   phoneNumber?: string;
   dateOfBirth?: Date;
   subscriptionStatus: "free" | "basic" | "premium";
@@ -59,6 +60,9 @@ const userSchema = new Schema<IUser>(
         },
       },
     ],
+    address: {
+      type: String,
+    },
     phoneNumber: {
       type: String,
     },
