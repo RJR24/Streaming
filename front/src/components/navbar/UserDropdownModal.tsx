@@ -114,16 +114,40 @@ const UserDropdownModal: React.FC<UserDropdownModalProps> = ({ isVisible }) => {
 
         <li>
           <a
-            href="#"
-            className="block px-4 py-2 hover:bg-gray-700"
+            href="/home"
+            className=" md:hidden block px-4 py-2 hover:bg-gray-700"
           >
-            Watch History
+            Home
           </a>
         </li>
         <li>
           <a
             href="#"
-            className="block px-4 py-2 hover:bg-gray-700"
+            className=" md:hidden block px-4 py-2 hover:bg-gray-700"
+          >
+            Tv Shows
+          </a>
+        </li>
+        <li>
+          <a
+            href="#"
+            className=" md:hidden block px-4 py-2 hover:bg-gray-700"
+          >
+            Movies
+          </a>
+        </li>
+        <li>
+          <a
+            href="#"
+            className=" md:hidden block px-4 py-2 hover:bg-gray-700"
+          >
+            New And Popular
+          </a>
+        </li>
+        <li>
+          <a
+            href="#"
+            className=" md:hidden block px-4 py-2 hover:bg-gray-700"
           >
             My List
           </a>
@@ -131,7 +155,7 @@ const UserDropdownModal: React.FC<UserDropdownModalProps> = ({ isVisible }) => {
       </ul>
       <div className="py-2">
         <a
-          href="#"
+          href=""
           className="block px-4 py-2 text-sm hover:bg-gray-700"
           onClick={handleLogout}
         >
