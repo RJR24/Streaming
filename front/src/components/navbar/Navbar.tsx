@@ -1,4 +1,3 @@
-// Navbar.tsx
 import React, { useState } from "react";
 import Image from "next/image";
 import UserDropdownModal from "./UserDropdownModal";
@@ -10,18 +9,18 @@ import search from "../../assets/image-logo/search.svg";
 import giftBox from "../../assets/image-logo/giftBox.svg";
 import bell from "../../assets/image-logo/bell.svg";
 import arrowDown from "../../assets/image-logo/arrowDown.svg";
-import profileImg from "../../assets/image-logo/ProfileIMG.svg";
+import profileAvatar from "../../assets/image-logo/ProfileIMG.svg";
 
 const Navbar: React.FC = () => {
   const [isUserDropdownVisible, setIsUserDropdownVisible] = useState(false);
 
   return (
-    <div className="navbar flex justify-between px-14 py-6 text-slate-100 max-h-md">
+    <div className="  navbar flex justify-between px-14 py-6 bg-black text-slate-100 max-h-md">
       <div className="flex items-center gap-12 ">
-        <div className="w-32 h-16 flex align-middle">
+        <div className="w-32 object-contain flex align-middle">
           <Image src={NetflixLogo} alt="Netflix Logo" />
         </div>
-        <div className="navbar-left flex gap-5">
+        <div className="navbar-left hidden md:flex gap-5">
           <div>Home</div>
           <div>TV Shows</div>
           <div>Movies</div>
@@ -45,9 +44,9 @@ const Navbar: React.FC = () => {
           <Image src={bell} alt="bell" width={20} />
         </div>
         <div className="user-avatar flex items-center gap-2">
-          <Image src={profileImg} alt="" width={32} />
-          <Image src={arrowDown} alt="" width={20} height={20} />
-          <div className="UserDropdownModal">
+          <Image src={profileAvatar} alt="profile avatar"  className=" w-8 object-contain" />
+          <Image src={arrowDown} alt="arrow Down" className=" w-5 object-contain" />
+          <div className="User-DropdownModal">
             <UserDropdownModal isVisible={isUserDropdownVisible} />
           </div>
         </div>
