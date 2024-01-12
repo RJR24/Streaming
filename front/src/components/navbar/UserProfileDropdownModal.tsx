@@ -9,7 +9,7 @@ interface UserDropdownModalProps {
   isVisible: boolean;
 }
 
-const UserDropdownModal: React.FC<UserDropdownModalProps> = ({ isVisible }) => {
+const UserProfileDropdownModal: React.FC<UserDropdownModalProps> = ({ isVisible }) => {
   const router = useRouter();
   const [userName, setUserName] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
@@ -120,38 +120,6 @@ const UserDropdownModal: React.FC<UserDropdownModalProps> = ({ isVisible }) => {
             Home
           </a>
         </li>
-        <li>
-          <a
-            href="#"
-            className=" md:hidden block px-4 py-2 hover:bg-gray-700"
-          >
-            Tv Shows
-          </a>
-        </li>
-        <li>
-          <a
-            href="#"
-            className=" md:hidden block px-4 py-2 hover:bg-gray-700"
-          >
-            Movies
-          </a>
-        </li>
-        <li>
-          <a
-            href="#"
-            className=" md:hidden block px-4 py-2 hover:bg-gray-700"
-          >
-            New And Popular
-          </a>
-        </li>
-        <li>
-          <a
-            href="#"
-            className=" md:hidden block px-4 py-2 hover:bg-gray-700"
-          >
-            My List
-          </a>
-        </li>
       </ul>
       <div className="py-2">
         <a
@@ -166,4 +134,4 @@ const UserDropdownModal: React.FC<UserDropdownModalProps> = ({ isVisible }) => {
   );
 };
 
-export default UserDropdownModal;
+export default UserProfileDropdownModal;

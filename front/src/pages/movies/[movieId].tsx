@@ -160,7 +160,7 @@ const MovieDetailsPage: React.FC = () => {
         <div className="container mx-auto p-8">
           {initialCheckComplete ? (
             <>
-              {/* Render the component content here */}
+              {/* Render the component content */}
               <div className="flex flex-col md:flex-row space-y-6 md:space-y-0">
                 {movieDetails?.videos?.results?.length &&
                 movieDetails?.videos?.results.length > 0 ? (
@@ -194,8 +194,8 @@ const MovieDetailsPage: React.FC = () => {
                   </div>
                 )}
 
-                <div className="w-full md:w-1/2 lg:w-1/3 mx-auto flex flex-col justify-center items-center">
-                  <h1 className="text-3xl font-bold mb-4">
+                <div className="w-full md:w-1/2 lg:w-1/3 p-4 mx-auto flex flex-col justify-center items-center">
+                  <h1 className=" d-flex text-center text-3xl font-bold mb-4">
                     {movieDetails?.title}
                   </h1>
                   <p className="text-gray-300 mb-4">
