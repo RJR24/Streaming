@@ -9,13 +9,13 @@ import Top10 from "../../assets/image-logo/Top10.svg";
 const HeroSection = () => {
   return (
     <div className="hero-container">
-      <div className="hero-movie-details flex flex-col gap-8 relative top-[20rem] left-[2.75rem] max-w-[480px]">
-        <div className="movie-title font-bold text-4xl md:text-lg sm:text-sm ">Money Heist</div>
-        <div className="text-3xl flex align-middle gap-4">
+      <div className="hero-movie-details md:w-[40rem] w-[20rem] flex flex-col gap-8 relative top-[20rem] left-[1.75rem] sm:left-[2.75rem] max-w-[480px]">
+        <div className="movie-title font-medium lg:text-[5rem] md:text-[4rem] text-5xl ">Money Heist</div>
+        <div className="md:text-3xl text-xl flex align-middle gap-4">
           <Image src={Top10} alt="Top10 sign" width={32} height={32} />
           Number 4 in UK Today
         </div>
-        <div className="text-white text-sm  font-normal font-['Netflix Sans']">
+        <div className="text-white text-sm md:max-w-md max-w-[17rem] font-normal font-['Netflix Sans']">
           Eight thieves take hostages and lock themselves in the Royal Mint of
           Spain as a criminal mastermind manipulates the police to carry out his
           plan. Tokyo inspired a cast full of city names.
