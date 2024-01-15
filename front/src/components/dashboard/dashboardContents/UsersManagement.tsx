@@ -40,7 +40,7 @@ const UsersManagement: React.FC = () => {
   }, []);
 
   const suspendUser = (userId: string) => {
-    setSelectedUserId(userId);
+    console.log("🚀 ~ suspendUser ~ userId:", userId)
     Swal.fire({
       title: "Are you sure?",
       text: `Do you want to ${
@@ -57,17 +57,17 @@ const UsersManagement: React.FC = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         if (users.find((user) => user._id === userId)?.suspended) {
-          confirmReactivate();
+          confirmReactivate(userId);
         } else {
-          confirmSuspension();
+          confirmSuspension(userId);
         }
       }
     });
   };
 
-  const confirmSuspension = async () => {
-    if (!selectedUserId) {
-      console.error("Access denied. No selectedUserId provided.");
+  const confirmSuspension = async (userId: string) => {
+    if (!userId) {
+      console.error("Access denied. No userId provided.");
       return;
     }
     try {
@@ -77,16 +77,16 @@ const UsersManagement: React.FC = () => {
         return;
       }
 
-      if (!selectedUserId) {
-        console.error("Access denied. No selectedUserId provided.");
+      if (!userId) {
+        console.error("Access denied. No userId provided.");
         return;
       }
 
       console.log("Token:", token);
-      console.log("Selected User ID:", selectedUserId);
+      console.log("Selected User ID:", userId);
 
       await axios.post(
-        `http://localhost:8000/api/suspendUser/${selectedUserId}`,
+        `http://localhost:8000/api/suspendUser/${userId}`,
         {},
         {
           headers: {
@@ -102,12 +102,10 @@ const UsersManagement: React.FC = () => {
     } catch (error) {
       console.error("Error suspending user:", error);
       Swal.fire("Error", "Failed to suspend user", "error");
-    } finally {
-      setSelectedUserId(null);
-    }
+    } 
   };
 
-  const confirmReactivate = async () => {
+  const confirmReactivate = async (userId: string) => {
     try {
       const token = localStorage.getItem("x-auth-token");
       if (!token) {
@@ -116,7 +114,7 @@ const UsersManagement: React.FC = () => {
       }
 
       await axios.post(
-        `http://localhost:8000/api/reactivateUser/${selectedUserId}`,
+        `http://localhost:8000/api/reactivateUser/${userId}`,
         {},
         {
           headers: {
@@ -124,9 +122,6 @@ const UsersManagement: React.FC = () => {
           },
         }
       );
-
-      // Move this line inside the try block
-      setSelectedUserId(null);
 
       Swal.fire("User Reactivated!", "", "success");
 
@@ -170,7 +165,7 @@ const UsersManagement: React.FC = () => {
                   </td>
                   <td className="py-3 px-2">
                     <div className="inline-flex items-center space-x-3">
-                      <a href="" title="Edit" className="hover:text-blue-500">
+                      <p title="Edit" className="cursor-pointer hover:text-blue-500">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -185,7 +180,7 @@ const UsersManagement: React.FC = () => {
                             d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
                           />
                         </svg>
-                      </a>
+                      </p>
                       <button
                         title="Suspend-user"
                         className="hover:text-red-500"
