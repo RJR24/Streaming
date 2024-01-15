@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import Link from "next/link";
 
 interface MovieItem {
@@ -19,7 +18,6 @@ interface CarouselProps {
 }
 
 const MovieCarousel: React.FC<CarouselProps> = ({ title, items = [] }) => {
-  const router = useRouter();
   const [hoveredMovie, setHoveredMovie] = useState<MovieItem | null>(null);
 
   const responsive = {
