@@ -3,6 +3,7 @@ import Link from "next/link";
 import CategoryDataFetcher from "../../dataFetching/CategoryDataFetcher";
 import AddCategoryModal from "../../AddCategoryModal";
 import RemoveCategoryModal from "../../RemoveCategoryModal";
+import Image from "next/image";
 
 const AdminMainDashboardContent = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -199,8 +200,7 @@ const AdminMainDashboardContent = () => {
                 </div>
                 <div className="border-t border-white/5 p-4">
                   <Link
-                    href="/admin/category/[category]"
-                    as="/admin/category/popular-on-netflix"
+                    href="/admin/category/popular"
                   >
                     <div className="inline-flex space-x-2 items-center text-center cursor-pointer">
                       <svg
@@ -245,8 +245,7 @@ const AdminMainDashboardContent = () => {
                 </div>
                 <div className="border-t border-white/5 p-4">
                   <Link
-                    href="/admin/category/[category]"
-                    as="/admin/category/tv-shows-on-netflix"
+                    href="/admin/category/tvShow"
                   >
                     <div className="inline-flex space-x-2 items-center text-center cursor-pointer">
                       <svg
@@ -291,8 +290,7 @@ const AdminMainDashboardContent = () => {
                 </div>
                 <div className="border-t border-white/5 p-4">
                   <Link
-                    href="/admin/category/[category]"
-                    as="/admin/category/original content"
+                    href="/admin/category/original"
                   >
                     <div className="inline-flex space-x-2 items-center text-center cursor-pointer">
                       <svg
@@ -337,8 +335,7 @@ const AdminMainDashboardContent = () => {
                 </div>
                 <div className="border-t border-white/5 p-4">
                   <Link
-                    href="/admin/category/[category]"
-                    as="/admin/category/popular-on-netflix"
+                    href="/admin/category/upcomingMovies"
                   >
                     <div className="inline-flex space-x-2 items-center text-center cursor-pointer">
                       <svg
@@ -383,8 +380,7 @@ const AdminMainDashboardContent = () => {
                 </div>
                 <div className="border-t border-white/5 p-4">
                   <Link
-                    href="/admin/category/[category]"
-                    as="/admin/category/popular-on-netflix"
+                    href="/admin/category/top10MoviesUK"
                   >
                     <div className="inline-flex space-x-2 items-center text-center cursor-pointer">
                       <svg
@@ -429,8 +425,7 @@ const AdminMainDashboardContent = () => {
                 </div>
                 <div className="border-t border-white/5 p-4">
                   <Link
-                    href="/admin/category/[category]"
-                    as="/admin/category/Tv-shows"
+                    href="/admin/category/trending"
                   >
                     <div className="inline-flex space-x-2 items-center text-center cursor-pointer">
                       <svg
@@ -554,11 +549,11 @@ const AdminMainDashboardContent = () => {
                   <td className="py-3 px-2 font-bold">
                     <div className="inline-flex space-x-3 items-center">
                       <span>
-                        <img
+                        <Image
                           className="rounded-full w-8 h-8"
                           src="https://images.generated.photos/tGiLEDiAbS6NdHAXAjCfpKoW05x2nq70NGmxjxzT5aU/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/OTM4ODM1LmpwZw.jpg"
-                          alt=""
-                        ></img>
+                          alt="user profile image"
+                        ></Image>
                       </span>
                       <span>Thai Mei</span>
                     </div>
@@ -615,11 +610,11 @@ const AdminMainDashboardContent = () => {
                   <td className="py-3 px-2 font-bold">
                     <div className="inline-flex space-x-3 items-center">
                       <span>
-                        <img
+                        <Image
                           className="rounded-full w-8 h-8"
                           src="https://images.generated.photos/tGiLEDiAbS6NdHAXAjCfpKoW05x2nq70NGmxjxzT5aU/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/OTM4ODM1LmpwZw.jpg"
                           alt=""
-                        ></img>
+                        ></Image>
                       </span>
                       <span>Thai Mei</span>
                     </div>
@@ -676,11 +671,11 @@ const AdminMainDashboardContent = () => {
                   <td className="py-3 px-2 font-bold">
                     <div className="inline-flex space-x-3 items-center">
                       <span>
-                        <img
+                        <Image
                           className="rounded-full w-8 h-8"
                           src="https://images.generated.photos/tGiLEDiAbS6NdHAXAjCfpKoW05x2nq70NGmxjxzT5aU/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/OTM4ODM1LmpwZw.jpg"
                           alt=""
-                        ></img>
+                        ></Image>
                       </span>
                       <span>Thai Mei</span>
                     </div>
@@ -737,11 +732,11 @@ const AdminMainDashboardContent = () => {
                   <td className="py-3 px-2 font-bold">
                     <div className="inline-flex space-x-3 items-center">
                       <span>
-                        <img
+                        <Image
                           className="rounded-full w-8 h-8"
                           src="https://images.generated.photos/f_xU7q780YXiKG7IwKVV05eU6Sj2nIodEkN1S8GyM2M/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/NDk2MTc4LmpwZw.jpg"
                           alt=""
-                        ></img>
+                        ></Image>
                       </span>
                       <span>Mark Spike</span>
                     </div>
