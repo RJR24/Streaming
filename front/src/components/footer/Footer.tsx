@@ -8,11 +8,11 @@ import Youtube from "../../../public/images-logo/Youtube01.svg";
 const Footer = () => {
   return (
    <div className="footer-container flex justify-center items-center bg-neutral-900">
-    <div className=" footer w-full max-w-fit flex-col h-auto py-6  justify-center items-start gap-5 inline-flex">
+    <div className=" footer w-full  max-w-fit flex-col h-auto py-6  justify-center items-start gap-5 inline-flex">
       <div className="justify-start cursor-pointer min-w-max items-start gap-5 inline-flex text-zinc-500">
         Questions? Call 1-844-505-2993
       </div>
-      <div className="footer-items justify-center items-start gap-5 md:gap-14 lg:gap-56 inline-flex">
+      <div className="footer-items justify-center items-start gap-5 xl:gap-56 md:gap-14 lg:gap-48 inline-flex">
         <div className="flex-col min-w-fit justify-start items-start gap-3 inline-flex">
           <div className="text-zinc-500 cursor-pointer text-xs font-normal font-['Netflix Sans']">
             FAQ
