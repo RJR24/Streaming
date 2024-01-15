@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 
 import CategoryDataFetcher from "../../../components/dataFetching/CategoryDataFetcher";
+import Image from "next/image";
 
 interface Movie {
   title: string;
@@ -16,7 +17,7 @@ interface Movie {
 const CategoryDetailsPage = () => {
   const router = useRouter();
   const { category } = router.query;
-  const [selectedCategory, setSelectedCategory] = useState("popular");
+  const [selectedCategory, setSelectedCategory] = useState<string>(category as string);
   const [newMovie, setNewMovie] = useState({ title: "", genre: "" });
   const [selectedMovieId, setSelectedMovieId] = useState("");
   const [data, setData] = useState<Movie[]>([]);
@@ -283,10 +284,12 @@ const CategoryDetailsPage = () => {
                   <td className="py-3 px-2 font-bold">
                     <div className="inline-flex space-x-3 items-center">
                       <span>
-                        <img
+                        <Image
                           className="rounded-full w-10 h-10"
                           src={movie.imageUrl}
                           alt={`Movie ${movie.title} Poster`}
+                          width={200}
+                          height={200}
                         />
                       </span>
                     </div>
@@ -306,8 +309,8 @@ const CategoryDetailsPage = () => {
                           className="w-5 h-5"
                         >
                           <path
-                            strokLinecap="round"
-                            strokLinejoin="round"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                             d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
                           />
                         </svg>
