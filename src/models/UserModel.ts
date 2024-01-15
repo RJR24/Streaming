@@ -10,6 +10,8 @@ export interface IUser extends Document {
     id: string;
     title: string;
     imageUrl: string;
+    originalLanguage?: string;
+    rating?: number;
   }[];
   address?: string;
   phoneNumber?: string;
@@ -57,6 +59,12 @@ const userSchema = new Schema<IUser>(
         imageUrl: {
           type: String,
           required: true,
+        },
+        rating: {
+          type: Number,
+        },
+        originalLanguage: {
+          type: String,
         },
       },
     ],
