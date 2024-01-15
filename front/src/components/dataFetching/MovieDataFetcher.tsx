@@ -2,19 +2,42 @@ import React, { useEffect, useState } from "react";
 import Carousel from "../carousels/Carousel";
 import axios from "axios";
 
+interface MovieItem {
+  title: string;
+  imageUrl: string;
+  id: string;
+  voteAverage: number;
+  originalLanguage: string;
+}
+
 interface MovieDataFetcherProps {
   endpoint: string;
-  transformFunction: (movie: any) => { title: string; imageUrl: string; id: string };
   title: string;
 }
 
-const MovieDataFetcher: React.FC<MovieDataFetcherProps> = ({ endpoint, transformFunction, title }) => {
-  const [movies, setMovies] = useState([]);
+const MovieDataFetcher: React.FC<MovieDataFetcherProps> = ({
+  endpoint,
+  title,
+}) => {
+  const [movies, setMovies] = useState<MovieItem[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(endpoint);
+
+        const transformFunction = (movie: any): MovieItem => {
+          return {
+            title: movie.title || "No Title",
+            imageUrl: movie.poster_path
+              ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
+              : "", // Adjust the path accordingly
+            id: movie.id.toString(),
+            voteAverage: Math.round(movie.vote_average * 10) / 10,
+            originalLanguage: movie.original_language || "N/A",
+          };
+        };
+
         const moviesData = response.data.results.map(transformFunction);
         setMovies(moviesData);
       } catch (error) {
@@ -23,7 +46,7 @@ const MovieDataFetcher: React.FC<MovieDataFetcherProps> = ({ endpoint, transform
     };
 
     fetchData();
-  }, [endpoint, transformFunction]);
+  }, [endpoint]);
 
   return <Carousel title={title} items={movies} />;
 };

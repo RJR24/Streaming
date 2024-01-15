@@ -340,7 +340,7 @@ const uploadProfilePictureHandler = async (
 const addToMyList = async (req: Request, res: Response) => {
   const { movieId } = req.params;
   const userId = req.user._id; // user information stored in req.user
-  const { title, backdrop_path } = req.body;
+  const { title, backdrop_path, rating, originalLanguage } = req.body;
 
   try {
     const user = await UserModel.findById(userId);
@@ -351,7 +351,13 @@ const addToMyList = async (req: Request, res: Response) => {
 
     // Add the movieId to the user's myList
     if (!user.myList.some((movie) => movie.id === movieId)) {
-      user.myList.push({ id: movieId, title, imageUrl: backdrop_path });
+      user.myList.push({
+        id: movieId,
+        title,
+        imageUrl: backdrop_path,
+        rating: rating || 0, // Default to 0 if not provided
+        originalLanguage: originalLanguage || "", // Default to empty string if not provided
+      });
       await user.save();
     }
 
@@ -364,6 +370,7 @@ const addToMyList = async (req: Request, res: Response) => {
     });
   }
 };
+
 
 const removeFromMyList = async (req: Request, res: Response) => {
   const { movieId } = req.params;

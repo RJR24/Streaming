@@ -14,16 +14,18 @@ import {
 interface Video {
   key: string;
   name: string;
-}
-interface MovieDetails {
-  id: string;
-  title: string;
-  genres: { name: string }[];
-  release_date: string;
-  description: string;
-  backdrop_path: string;
-  videos: { name: string; key: string; results: Video[] };
-}
+  }
+  interface MovieDetails {
+    id: string;
+    title: string;
+    genres: { name: string }[];
+    release_date: string;
+    description: string;
+    backdrop_path: string;
+    originalLanguage: string;
+    voteAverage: number;
+    videos: { name: string; key: string; results: Video[] };
+  }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -68,6 +70,8 @@ const MovieDetailsPage: React.FC = () => {
           {
             id: movieDetails?.id,
             title: movieDetails?.title,
+            originalLanguage: movieDetails?.originalLanguage,
+            rating: movieDetails?.voteAverage,
             backdrop_path: `https://image.tmdb.org/t/p/w500${movieDetails?.backdrop_path}`,
           },
           {
@@ -76,6 +80,7 @@ const MovieDetailsPage: React.FC = () => {
             },
           }
         );
+        
         Swal.fire({
           icon: "success",
           title: "Added to My List!",
