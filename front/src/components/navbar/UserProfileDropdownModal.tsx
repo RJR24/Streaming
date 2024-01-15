@@ -1,4 +1,5 @@
 import axios from "axios";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
@@ -49,12 +50,6 @@ const UserProfileDropdownModal: React.FC<UserDropdownModalProps> = ({ isVisible 
     checkUserRole();
   }, [isVisible, router]);
 
-  const handleDashboardClick = () => {
-    // Redirect to the appropriate dashboard based on the user's role
-    const dashboardPath = isAdmin ? "/adminDashboard" : "/dashboard";
-    router.push(dashboardPath);
-  };
-
   const handleLogout = async () => {
     try {
       // Show a confirmation message
@@ -103,32 +98,30 @@ const UserProfileDropdownModal: React.FC<UserDropdownModalProps> = ({ isVisible 
         aria-labelledby="dropdownInformationButton"
       >
         <li>
-          <a
-            href="#"
-            className="block px-4 py-2 hover:bg-gray-700"
-            onClick={handleDashboardClick}
+          <Link
+          href="/adminDashboard"
+            className="block px-5 py-2 hover:bg-gray-700"
           >
             Dashboard
-          </a>
+          </Link>
         </li>
 
         <li>
-          <a
+          <Link
             href="/home"
             className=" md:hidden block px-4 py-2 hover:bg-gray-700"
           >
             Home
-          </a>
+          </Link>
         </li>
       </ul>
       <div className="py-2">
-        <a
-          href=""
+        <p
           className="block px-4 py-2 text-sm hover:bg-gray-700"
           onClick={handleLogout}
         >
           Sign out
-        </a>
+        </p>
       </div>
     </div>
   );
