@@ -1,4 +1,3 @@
-// MovieDataFetcher.tsx
 import React, { useEffect, useState } from "react";
 import Carousel from "../carousels/Carousel";
 import axios from "axios";

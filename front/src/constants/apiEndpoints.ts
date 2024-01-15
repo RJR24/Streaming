@@ -1,5 +1,3 @@
-// apiEndpoints.js
-// apiEndpoints.ts
 const API_BASE_URL = "http://localhost:8000/api";
 
 export const MY_LIST_ADD_ITEM = (id: string) => `${API_BASE_URL}/user/mylist/add/${id}`;
