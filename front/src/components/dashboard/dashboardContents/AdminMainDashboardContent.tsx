@@ -460,11 +460,10 @@ const AdminMainDashboardContent = () => {
               </div>
             </div>
             <div
-              className="border-t border-white/5 p-4"
+              className="border-t cursor-pointer border-white/5 p-4"
               onClick={handleOpenAddModal}
             >
-              <a
-                href="#"
+              <p
                 className="inline-flex space-x-2 items-center text-center"
               >
                 <svg
@@ -482,7 +481,7 @@ const AdminMainDashboardContent = () => {
                   />
                 </svg>
                 <span>Click to add</span>
-              </a>
+              </p>
             </div>
             {/* Render the CategoryModal */}
             {isAddModalOpen && (
@@ -500,11 +499,10 @@ const AdminMainDashboardContent = () => {
               </div>
             </div>
             <div
-              className="border-t border-white/5 p-4"
+              className="border-t cursor-pointer border-white/5 p-4"
               onClick={handleOpenRemoveModal}
             >
-              <a
-                href="#"
+              <p
                 className="inline-flex space-x-2 items-center text-center"
               >
                 <svg
@@ -522,7 +520,7 @@ const AdminMainDashboardContent = () => {
                   />
                 </svg>
                 <span>Click to remove</span>
-              </a>
+              </p>
             </div>
             {/* Render the CategoryModal */}
             {isRemoveModalOpen && (
@@ -550,9 +548,12 @@ const AdminMainDashboardContent = () => {
                     <div className="inline-flex space-x-3 items-center">
                       <span>
                         <Image
-                          className="rounded-full w-8 h-8"
+                          className="rounded-full "
                           src="https://images.generated.photos/tGiLEDiAbS6NdHAXAjCfpKoW05x2nq70NGmxjxzT5aU/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/OTM4ODM1LmpwZw.jpg"
                           alt="user profile image"
+                          width={32}
+                          height={32}
+                          
                         ></Image>
                       </span>
                       <span>Thai Mei</span>
@@ -563,7 +564,7 @@ const AdminMainDashboardContent = () => {
                   <td className="py-3 px-2">Approved</td>
                   <td className="py-3 px-2">
                     <div className="inline-flex items-center space-x-3">
-                      <a href="" title="Edit" className="hover:text-green-500">
+                      <p title="Edit" className="cursor-pointer hover:text-green-500">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -578,12 +579,11 @@ const AdminMainDashboardContent = () => {
                             d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
                           />
                         </svg>
-                      </a>
+                      </p>
 
-                      <a
-                        href=""
+                      <p
                         title="Suspend user"
-                        className="hover:text-red-500"
+                        className="cursor-pointer hover:text-red-500"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -599,7 +599,7 @@ const AdminMainDashboardContent = () => {
                             d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
                           />
                         </svg>
-                      </a>
+                      </p>
                     </div>
                   </td>
                 </tr>
@@ -611,9 +611,11 @@ const AdminMainDashboardContent = () => {
                     <div className="inline-flex space-x-3 items-center">
                       <span>
                         <Image
-                          className="rounded-full w-8 h-8"
+                          className="rounded-full "
                           src="https://images.generated.photos/tGiLEDiAbS6NdHAXAjCfpKoW05x2nq70NGmxjxzT5aU/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/OTM4ODM1LmpwZw.jpg"
-                          alt=""
+                          alt="user profile image"
+                          width={32}
+                          height={32}
                         ></Image>
                       </span>
                       <span>Thai Mei</span>
@@ -624,7 +626,7 @@ const AdminMainDashboardContent = () => {
                   <td className="py-3 px-2">Approved</td>
                   <td className="py-3 px-2">
                     <div className="inline-flex items-center space-x-3">
-                      <a href="" title="Edit" className="hover:text-green-500">
+                      <p title="Edit" className="cursor-pointer hover:text-green-500">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -639,12 +641,11 @@ const AdminMainDashboardContent = () => {
                             d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
                           />
                         </svg>
-                      </a>
+                      </p>
 
-                      <a
-                        href=""
+                      <p
                         title="Suspend user"
-                        className="hover:text-red-500"
+                        className="cursor-pointer hover:text-red-500"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -660,7 +661,7 @@ const AdminMainDashboardContent = () => {
                             d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
                           />
                         </svg>
-                      </a>
+                      </p>
                     </div>
                   </td>
                 </tr>
@@ -672,9 +673,11 @@ const AdminMainDashboardContent = () => {
                     <div className="inline-flex space-x-3 items-center">
                       <span>
                         <Image
-                          className="rounded-full w-8 h-8"
+                          className="rounded-full "
                           src="https://images.generated.photos/tGiLEDiAbS6NdHAXAjCfpKoW05x2nq70NGmxjxzT5aU/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/OTM4ODM1LmpwZw.jpg"
-                          alt=""
+                          alt="user profile image"
+                          width={32}
+                          height={32}
                         ></Image>
                       </span>
                       <span>Thai Mei</span>
@@ -685,7 +688,7 @@ const AdminMainDashboardContent = () => {
                   <td className="py-3 px-2">Approved</td>
                   <td className="py-3 px-2">
                     <div className="inline-flex items-center space-x-3">
-                      <a href="" title="Edit" className="hover:text-green-500">
+                      <p title="Edit" className="cursor-pointer hover:text-green-500">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -700,12 +703,11 @@ const AdminMainDashboardContent = () => {
                             d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
                           />
                         </svg>
-                      </a>
+                      </p>
 
-                      <a
-                        href=""
+                      <p
                         title="Suspend user"
-                        className="hover:text-red-500"
+                        className="cursor-pointer hover:text-red-500"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -721,7 +723,7 @@ const AdminMainDashboardContent = () => {
                             d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
                           />
                         </svg>
-                      </a>
+                      </p>
                     </div>
                   </td>
                 </tr>
@@ -733,9 +735,11 @@ const AdminMainDashboardContent = () => {
                     <div className="inline-flex space-x-3 items-center">
                       <span>
                         <Image
-                          className="rounded-full w-8 h-8"
+                          className="rounded-full "
                           src="https://images.generated.photos/f_xU7q780YXiKG7IwKVV05eU6Sj2nIodEkN1S8GyM2M/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/NDk2MTc4LmpwZw.jpg"
-                          alt=""
+                          alt="user profile image"
+                          width={32}
+                          height={32}
                         ></Image>
                       </span>
                       <span>Mark Spike</span>
@@ -746,7 +750,7 @@ const AdminMainDashboardContent = () => {
                   <td className="py-3 px-2">Approved</td>
                   <td className="py-3 px-2">
                     <div className="inline-flex items-center space-x-3">
-                      <a href="" title="Edit" className="hover:text-green-500">
+                      <p title="Edit" className="cursor-pointer hover:text-green-500">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -761,12 +765,11 @@ const AdminMainDashboardContent = () => {
                             d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
                           />
                         </svg>
-                      </a>
+                      </p>
 
-                      <a
-                        href=""
+                      <p
                         title="Suspend user"
-                        className="hover:text-red-500"
+                        className="cursor-pointer hover:text-red-500"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -782,7 +785,7 @@ const AdminMainDashboardContent = () => {
                             d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
                           />
                         </svg>
-                      </a>
+                      </p>
                     </div>
                   </td>
                 </tr>
