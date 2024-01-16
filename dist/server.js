@@ -36,14 +36,14 @@ const app = (0, express_1.default)();
 const port = process.env.PORT;
 app.use((0, express_1.json)());
 app.use(cors());
-mongoose_1.default.connect("mongodb://127.0.0.1:27017/streamingDB", {});
+mongoose_1.default.connect("mongodb+srv://rezarezaeijamiuk:myaqchiqN6RdaG81@cluster0.1jqnuhd.mongodb.net/streamingDB?retryWrites=true&w=majority", {});
 const db = mongoose_1.default.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 db.once("open", () => {
     console.log("Connected to MongoDB");
 });
 app.use(indexRouter_1.default);
-app.listen(port, () => {
+app.listen(8000, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
 //# sourceMappingURL=server.js.map

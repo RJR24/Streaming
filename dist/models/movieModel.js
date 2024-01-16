@@ -8,7 +8,7 @@ const movieSchema = new mongoose_1.Schema({
     },
     movieId: {
         type: String,
-        required: true,
+        required: false,
     },
     overview: {
         type: String,
@@ -29,6 +29,11 @@ const movieSchema = new mongoose_1.Schema({
     backdropPath: {
         type: String,
         required: false,
+    },
+    category: {
+        type: String,
+        ref: "Category",
+        required: true,
     },
 }, { timestamps: true });
 const MovieModel = (0, mongoose_1.model)("Movie", movieSchema);

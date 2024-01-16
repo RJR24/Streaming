@@ -14,27 +14,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteMovie = exports.getMovies = exports.updateMovie = exports.createMovie = void 0;
 const movieModel_1 = __importDefault(require("../models/movieModel"));
+const CategoryModel_1 = __importDefault(require("../models/CategoryModel"));
 const createMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { title, movieId, overview, releaseDate, genre, posterPath, backdropPath, } = req.body;
+        const { title, genre, category } = req.body;
+        const existingCategory = yield CategoryModel_1.default.findOne({ title: category });
+        if (!existingCategory) {
+            return res.status(400).json({ error: "category not found!" });
+        }
         const newMovie = yield movieModel_1.default.create({
             title,
-            movieId,
-            overview,
-            releaseDate,
             genre,
-            posterPath,
-            backdropPath,
+            category: existingCategory._id,
         });
         return res.status(201).json({
-            message: 'Movie created successfully!',
+            message: "Movie created successfully!",
             data: newMovie,
         });
     }
     catch (error) {
-        console.error('Error creating movie:', error);
+        console.error("Error creating movie:", error);
         return res.status(500).json({
-            error: 'Internal server error',
+            error: "Internal server error",
             message: error.message,
         });
     }
@@ -54,19 +55,19 @@ const updateMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         }, { new: true });
         if (!updatedMovie) {
             return res.status(404).json({
-                error: 'Not Found',
-                message: 'Movie not found',
+                error: "Not Found",
+                message: "Movie not found",
             });
         }
         return res.status(200).json({
-            message: 'Movie updated successfully!',
+            message: "Movie updated successfully!",
             data: updatedMovie,
         });
     }
     catch (error) {
-        console.error('Error updating movie:', error);
+        console.error("Error updating movie:", error);
         return res.status(500).json({
-            error: 'Internal server error',
+            error: "Internal server error",
             message: error.message,
         });
     }
@@ -76,14 +77,14 @@ const getMovies = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const movies = yield movieModel_1.default.find();
         return res.status(200).json({
-            message: 'Movies fetched successfully!',
+            message: "Movies fetched successfully!",
             data: movies,
         });
     }
     catch (error) {
-        console.error('Error fetching movies:', error);
+        console.error("Error fetching movies:", error);
         return res.status(500).json({
-            error: 'Internal server error',
+            error: "Internal server error",
             message: error.message,
         });
     }
@@ -95,19 +96,19 @@ const deleteMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const deletedMovie = yield movieModel_1.default.findByIdAndDelete(movieId);
         if (!deletedMovie) {
             return res.status(404).json({
-                error: 'Not Found',
-                message: 'Movie not found',
+                error: "Not Found",
+                message: "Movie not found",
             });
         }
         return res.status(200).json({
-            message: 'Movie deleted successfully!',
+            message: "Movie deleted successfully!",
             data: deletedMovie,
         });
     }
     catch (error) {
-        console.error('Error deleting movie:', error);
+        console.error("Error deleting movie:", error);
         return res.status(500).json({
-            error: 'Internal server error',
+            error: "Internal server error",
             message: error.message,
         });
     }

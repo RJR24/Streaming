@@ -7,7 +7,6 @@ import Swal from "sweetalert2";
 import "./login-styles.css";
 
 import axiosInstance from "../../utils/axiosConfig";
-import Link from "next/link";
 import SignInSignUpHeader from "../sIn-sUp-header/SignInSignUpHeader";
 import { useRouter } from "next/router";
 

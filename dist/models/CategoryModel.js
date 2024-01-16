@@ -5,9 +5,19 @@ const categorySchema = new mongoose_1.Schema({
     title: {
         type: String,
         required: true,
+        unique: true,
+        trim: true,
+    },
+    slug: {
+        type: String,
+        required: false,
+        unique: true,
+        trim: true,
+        lowercase: true,
     },
     description: {
         type: String,
+        trim: true,
     },
 }, {
     timestamps: true,

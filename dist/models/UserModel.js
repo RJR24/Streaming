@@ -40,8 +40,17 @@ const userSchema = new mongoose_1.Schema({
                 type: String,
                 required: true,
             },
+            rating: {
+                type: Number,
+            },
+            originalLanguage: {
+                type: String,
+            },
         },
     ],
+    address: {
+        type: String,
+    },
     phoneNumber: {
         type: String,
     },
@@ -53,6 +62,7 @@ const userSchema = new mongoose_1.Schema({
         enum: ["free", "basic", "premium"],
         default: "free",
     },
+    suspended: { type: Boolean, default: false },
 }, {
     timestamps: true,
 });

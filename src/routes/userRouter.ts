@@ -14,7 +14,7 @@ import {
 } from "../controllers/userController";
 
 import { addToMyList, removeFromMyList } from "../controllers/userController";
-import { isAdmin, isLoggedIn } from "../middlewares/auth";
+import { isAdmin, isLoggedIn, checkSuspended } from "../middlewares/auth";
 
 const userRouter = Router();
 

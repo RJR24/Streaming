@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isAdmin = exports.isLoggedIn = void 0;
+exports.checkSuspended = exports.isAdmin = exports.isLoggedIn = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const UserModel_1 = __importDefault(require("../models/UserModel"));
 const tokenBlackList_1 = __importDefault(require("../models/tokenBlackList"));
@@ -56,4 +56,34 @@ const isAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
     next();
 });
 exports.isAdmin = isAdmin;
+const checkSuspended = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log(req);
+        if (!req.user || !req.user._id) {
+            return res.status(401).json({
+                error: 'Unauthorized',
+                message: 'User not authenticated',
+            });
+        }
+        const foundUser = yield UserModel_1.default.findById(req.user._id);
+        if (!foundUser || foundUser.suspended) {
+            return res.status(403).json({
+                error: 'Forbidden',
+                message: 'User account is suspended',
+            });
+        }
+        next();
+        return Promise.resolve(res.status(200).json({
+            message: 'User is not suspended',
+        }));
+    }
+    catch (error) {
+        console.error('Error checking user suspension:', error);
+        return res.status(500).json({
+            error: 'Internal Server Error',
+            message: 'An unexpected error occurred',
+        });
+    }
+});
+exports.checkSuspended = checkSuspended;
 //# sourceMappingURL=auth.js.map

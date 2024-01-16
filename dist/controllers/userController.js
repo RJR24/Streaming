@@ -12,12 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uploadProfilePictureHandler = exports.getUsersList = exports.userMoviesList = exports.getMyListMovieDetails = exports.addToMyList = exports.removeFromMyList = exports.logoutUser = exports.getUserProfile = exports.updateUserProfile = exports.loginUser = exports.registerUser = void 0;
+exports.reactivateUser = exports.suspendUser = exports.uploadProfilePictureHandler = exports.getUsersList = exports.userMoviesList = exports.getMyListMovieDetails = exports.addToMyList = exports.removeFromMyList = exports.logoutUser = exports.getUserProfile = exports.updateUserProfile = exports.loginUser = exports.registerUser = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const joi_1 = __importDefault(require("joi"));
 const UserModel_1 = __importDefault(require("../models/UserModel"));
 const tokenBlackList_1 = __importDefault(require("../models/tokenBlackList"));
+const multerMiddleware_1 = __importDefault(require("../middlewares/multerMiddleware"));
 const saltRounds = 10;
 const jwtSecret = process.env.JWT_SECRET;
 const registerSchema = joi_1.default.object({
@@ -35,10 +36,10 @@ const loginSchema = joi_1.default.object({
     password: joi_1.default.string().required(),
 });
 const updateUserProfileSchema = joi_1.default.object({
-    name: joi_1.default.string().required(),
-    email: joi_1.default.string().email().required(),
+    name: joi_1.default.string(),
     phoneNumber: joi_1.default.string().allow(null, "").optional(),
     dateOfBirth: joi_1.default.date().iso().optional(),
+    address: joi_1.default.string().allow(null, "").optional(),
 });
 const uploadProfilePictureSchema = joi_1.default.object({
     file: joi_1.default.object({
@@ -85,7 +86,6 @@ exports.registerUser = registerUser;
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { error, value } = loginSchema.validate(req.body);
-        console.log(error, value);
         if (error) {
             return res.status(400).json({
                 error: "Validation error",
@@ -107,12 +107,17 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 message: "Invalid email or password",
             });
         }
-        const token = jsonwebtoken_1.default.sign({ userId: user._id }, jwtSecret, {
+        const tokenPayload = {
+            userId: user._id,
+            isAdmin: user.isAdmin,
+        };
+        const token = jsonwebtoken_1.default.sign(tokenPayload, jwtSecret, {
             expiresIn: "1h",
         });
         return res.status(200).json({
             message: "Login successful!",
             token,
+            isAdmin: user.isAdmin,
         });
     }
     catch (error) {
@@ -168,12 +173,12 @@ exports.getUserProfile = getUserProfile;
 const updateUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
-        const { name, email, phoneNumber, dateOfBirth } = req.body;
+        const { name, phoneNumber, dateOfBirth, address } = req.body;
         const { error, value } = updateUserProfileSchema.validate({
             name,
-            email,
             phoneNumber,
             dateOfBirth,
+            address
         });
         if (error) {
             return res.status(400).json({
@@ -181,7 +186,7 @@ const updateUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, functi
                 message: error.details[0].message,
             });
         }
-        const { name: validatedName, email: validatedEmail, phoneNumber: validatedPhoneNumber, dateOfBirth: validatedDateOfBirth, } = value;
+        const { name: validatedName, phoneNumber: validatedPhoneNumber, dateOfBirth: validatedDateOfBirth, address: validatedAddress } = value;
         const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a._id;
         if (!userId) {
             return res.status(401).json({
@@ -191,9 +196,9 @@ const updateUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, functi
         }
         const updatedUser = yield UserModel_1.default.findByIdAndUpdate(userId, {
             name: validatedName,
-            email: validatedEmail,
             phoneNumber: validatedPhoneNumber,
             dateOfBirth: validatedDateOfBirth,
+            address: validatedAddress,
         }, { new: true });
         if (!updatedUser) {
             return res.status(404).json({
@@ -217,9 +222,21 @@ const updateUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, functi
 exports.updateUserProfile = updateUserProfile;
 const uploadProfilePictureHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        console.log("Request received:", req.params);
+        const multerMiddleware = () => new Promise((resolve, reject) => {
+            (0, multerMiddleware_1.default)(req, res, (err) => {
+                if (err) {
+                    console.error("Error uploading file:", err);
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
+        yield multerMiddleware();
         const userId = req.params.userId;
-        const { file } = req.body;
-        console.log(file);
+        const file = req.file;
         if (!file) {
             return res.status(400).json({ error: "No file uploaded" });
         }
@@ -244,14 +261,20 @@ exports.uploadProfilePictureHandler = uploadProfilePictureHandler;
 const addToMyList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { movieId } = req.params;
     const userId = req.user._id;
-    const { title, backdrop_path } = req.body;
+    const { title, backdrop_path, rating, originalLanguage } = req.body;
     try {
         const user = yield UserModel_1.default.findById(userId);
         if (!user) {
             return res.status(404).json({ error: "User not found" });
         }
         if (!user.myList.some((movie) => movie.id === movieId)) {
-            user.myList.push({ id: movieId, title, imageUrl: backdrop_path });
+            user.myList.push({
+                id: movieId,
+                title,
+                imageUrl: backdrop_path,
+                rating: rating || 0,
+                originalLanguage: originalLanguage || "",
+            });
             yield user.save();
         }
         return res.status(200).json({ message: "Movie added to My List" });
@@ -360,4 +383,40 @@ const getUsersList = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.getUsersList = getUsersList;
+const suspendUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.params.userId;
+    try {
+        const user = yield UserModel_1.default.findById(userId);
+        if (!user) {
+            res.status(404).json({ error: "User not found." });
+            return;
+        }
+        user.suspended = true;
+        yield user.save();
+        res.status(200).json({ message: "User suspended successfully." });
+    }
+    catch (error) {
+        console.error("Error suspending user:", error);
+        res.status(500).json({ error: "Internal server error." });
+    }
+});
+exports.suspendUser = suspendUser;
+const reactivateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.params.userId;
+    try {
+        const user = yield UserModel_1.default.findById(userId);
+        if (!user) {
+            res.status(404).json({ error: "User not found." });
+            return;
+        }
+        user.suspended = false;
+        yield user.save();
+        res.status(200).json({ message: "User reactivated successfully." });
+    }
+    catch (error) {
+        console.error("Error reactivating user:", error);
+        res.status(500).json({ error: "Internal server error." });
+    }
+});
+exports.reactivateUser = reactivateUser;
 //# sourceMappingURL=userController.js.map

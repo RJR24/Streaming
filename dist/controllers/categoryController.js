@@ -17,7 +17,7 @@ const CategoryModel_1 = __importDefault(require("../models/CategoryModel"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const createCategory = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { title, description } = req.body;
+        const { title, description, slug } = req.body;
         const existingCategory = yield CategoryModel_1.default.findOne({ title });
         if (existingCategory) {
             const response = {
@@ -26,7 +26,7 @@ const createCategory = (req, res) => __awaiter(void 0, void 0, void 0, function*
             };
             return res.status(400).json(response);
         }
-        const newCategory = yield CategoryModel_1.default.create({ title, description });
+        const newCategory = yield CategoryModel_1.default.create({ title, description, slug });
         const response = {
             message: "Category created successfully!",
             data: newCategory,

@@ -61,7 +61,7 @@ const MovieDetailsPage: React.FC = () => {
           title: "Removed from My List!",
           text: `${movieDetails?.title} has been removed from your My List.`,
           showConfirmButton: true,
-          timer: 3000,
+          timer: 1500,
         });
       } else {
         // Add to My List
@@ -86,7 +86,7 @@ const MovieDetailsPage: React.FC = () => {
           title: "Added to My List!",
           text: `${movieDetails?.title} has been added to your My List.`,
           showConfirmButton: true,
-          timer: 3000,
+          timer: 1500,
         });
       }
 
