@@ -1,5 +1,5 @@
 import { Document } from "mongoose";
-import { User as UserModel } from "./models/UserModel";
+import { User as UserModel } from "../src/models/UserModel"
 
 declare module "express" {
   interface Request {
