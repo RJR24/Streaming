@@ -2,7 +2,7 @@ import { Router } from "express";
 import { index } from "../controllers/indexController";
 import userRouter from "./userRouter";
 import categoryRouter from "./categoryRouter";
-import MovieRouter from "../routes/movieRoutes";
+import MovieRouter from "./movieRoutes";
 const indexRouter = Router();
 
 indexRouter.use(userRouter);
