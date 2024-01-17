@@ -5,7 +5,6 @@ const baseURL = 'http://localhost:8000';
 const timeout= 5*1000;
 const headers= {
   'Content-Type': 'application/json',
-  // 'Authorization': 'Bearer your_token_here'
 }
 
 

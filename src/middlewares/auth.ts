@@ -62,45 +62,45 @@ export const isAdmin = async (
 
 
 
-export const checkSuspended = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<Response<any, Record<string, any>>> => {
-  try {
-    console.log(req)
-    if (!req.user || !req.user._id) {
-      // User is not authenticated
-      return res.status(401).json({
-        error: 'Unauthorized',
-        message: 'User not authenticated',
-      });
-    }
+// export const checkSuspended = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ): Promise<Response<any, Record<string, any>>> => {
+//   try {
+//     console.log(req)
+//     if (!req.user || !req.user._id) {
+//       // User is not authenticated
+//       return res.status(401).json({
+//         error: 'Unauthorized',
+//         message: 'User not authenticated',
+//       });
+//     }
 
-    // Check user suspension status
-    const foundUser = await User.findById(req.user._id);
+//     // Check user suspension status
+//     const foundUser = await User.findById(req.user._id);
 
-    if (!foundUser || foundUser.suspended) {
-      // User is suspended or not found
-      return res.status(403).json({
-        error: 'Forbidden',
-        message: 'User account is suspended',
-      });
-    }
+//     if (!foundUser || foundUser.suspended) {
+//       // User is suspended or not found
+//       return res.status(403).json({
+//         error: 'Forbidden',
+//         message: 'User account is suspended',
+//       });
+//     }
 
-    // User is not suspended, proceed to the next middleware or route handler
-    next();
+//     // User is not suspended, proceed to the next middleware or route handler
+//     next();
 
-    // Return a resolved promise with a default response
-    return Promise.resolve(res.status(200).json({
-      message: 'User is not suspended',
-    }));
-  } catch (error) {
-    // Handle other errors gracefully
-    console.error('Error checking user suspension:', error);
-    return res.status(500).json({
-      error: 'Internal Server Error',
-      message: 'An unexpected error occurred',
-    });
-  }
-};
+//     // Return a resolved promise with a default response
+//     return Promise.resolve(res.status(200).json({
+//       message: 'User is not suspended',
+//     }));
+//   } catch (error) {
+//     // Handle other errors gracefully
+//     console.error('Error checking user suspension:', error);
+//     return res.status(500).json({
+//       error: 'Internal Server Error',
+//       message: 'An unexpected error occurred',
+//     });
+//   }
+// };
